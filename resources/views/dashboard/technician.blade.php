@@ -15,17 +15,17 @@
 								<i class="kt-font-brand flaticon-users-1"></i>
 							</span>
                             <h3 class="kt-portlet__head-title">
-                                Passengers
+                                Technicians
                             </h3>
                         </div>
                         <div class="kt-portlet__head-toolbar">
                             <div class="kt-portlet__head-wrapper">
                                 <div class="kt-portlet__head-actions">
                                     <div class="dropdown dropdown-inline">
-                                        <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="la la-download"></i> Export
-                                        </button>
+{{--                                        <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle"--}}
+{{--                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+{{--                                            <i class="la la-download"></i> Export--}}
+{{--                                        </button>--}}
                                         <div class="dropdown-menu dropdown-menu-right">
                                             <ul class="kt-nav">
                                                 <li class="kt-nav__section kt-nav__section--first">
@@ -65,10 +65,10 @@
                                         </div>
                                     </div>
                                     &nbsp;
-                                    <a href="{{env('APP_URL')}}/passengers/new"
+                                    <a href="{{env('APP_URL')}}/technicians/new"
                                        class="btn btn-brand btn-elevate btn-icon-sm">
                                         <i class="la la-plus"></i>
-                                        New Record
+                                        New Technician
                                     </a>
                                 </div>
                             </div>
@@ -78,16 +78,15 @@
 
                         <!--begin: Datatable -->
                         <table class="table table-striped- table-bordered table-hover table-checkable"
-                               id="passengers-table">
+                               id="technician-table">
                             <thead>
                             <tr>
                                 <th>#ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Card Details</th>
-                                <th>Status</th>
-                                <th>Rides</th>
+                                <th>Address</th>
+                                <th>Website</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -106,26 +105,25 @@
     <!-- end:: Content -->
     <script>
         $(document).ready(function() {
-            $('#passengers-table').DataTable({
+            $('#technician-table').DataTable({
                 "autoWidth": true,
                 "responsive": true,
                 "processing": true,
                 "serverSide": true,
                 "order": [],
                 "ajax":{
-                    "url": `{{env('APP_URL')}}/passengers/all`,
+                    "url": `{{env('APP_URL')}}/technicians/all`,
                     "dataType": "json",
                     "type": "POST",
                     "data":{ _token: "{{csrf_token()}}"}
                 },
                 "columns": [
-                    { "data": "passenger_system_id" },
-                    { "data": "passenger_name" },
-                    { "data": "passenger_email" },
-                    { "data": "passenger_phone" },
-                    { "data": "card_detail"},
-                    { "data": "status" },
-                    { "data": "rides" },
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "email" },
+                    { "data": "phone" },
+                    { "data": "address"},
+                    { "data": "website" },
                     { "data": "options" }
                 ]
 

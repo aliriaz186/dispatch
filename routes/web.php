@@ -20,42 +20,22 @@ Route::get('/clear-cache', function() {
     \Illuminate\Support\Facades\Artisan::call('config:cache');
     // return what you want
 });
-Route::get('/admin', 'AuthController@index');
+Route::get('/', 'AuthController@index');
 Route::post('/admin/login', 'AuthController@login');
 Route::post('/signout', 'AuthController@signout');
 Route::get('dashboard', 'DashboardController@index');
-Route::get('providers', 'DashboardController@getProviders');
+Route::get('technicians', 'TechnicianController@getView');
+Route::post('technicians/all', 'TechnicianController@getAll');
+Route::get('technicians/new', 'TechnicianController@newTechnicianView');
+Route::post('technician/save', 'TechnicianController@saveTechnician');
+Route::get('technicians/manage/{id}', 'TechnicianController@manageTechnician');
+Route::post('technicians/update', 'TechnicianController@updateTechnician');
+Route::get('jobs', 'JobsController@getView');
+Route::post('jobs/all', 'JobsController@getAll');
+Route::get('jobs/new', 'JobsController@newJobView');
+Route::post('job/save', 'JobsController@saveJob');
+Route::get('customers', 'CustomerController@getView');
+Route::post('customers/all', 'CustomerController@getAll');
+Route::get('customers/manage/{id}', 'CustomerController@manage');
+Route::post('customer/update', 'CustomerController@update');
 
-
-
-Route::get('dispatcher', 'DispatcherController@index');
-Route::get('passengers', 'PassengerController@index');
-Route::get('drivers', 'DriverController@index');
-Route::get('cars', 'FleetController@index');
-Route::get('passengers/getPassengersLists', 'PassengerController@getPassengersList');
-Route::get('drivers/manage/{id}', 'DriverController@manage');
-Route::post('drivers/all', 'DriverController@getAll');
-Route::get('passengers/manage/{id}', 'PassengerController@manage');
-Route::post('passengers/all', 'PassengerController@getAll');
-Route::get('rates/mileage', 'RatesController@mileage');
-Route::get('rates/location', 'RatesController@location');
-Route::get('rates/specialdate', 'RatesController@specialdate');
-Route::get('rates/customdate', 'RatesController@customdate');
-Route::post('drivers/update', 'DriverController@updateDriver');
-Route::get('drivers/new', 'DriverController@newDriver');
-Route::post('drivers/save', 'DriverController@saveDriver');
-Route::post('location/rate/new', 'RatesController@newLocationRate');
-Route::post('location/rate/save', 'RatesController@saveLocationRates');
-Route::post('location/rate/delete', 'RatesController@deleteLocationRates');
-Route::post('passenger/update', 'PassengerController@updatePassenger');
-Route::get('passengers/new', 'PassengerController@newPassenger');
-Route::post('passenger/save', 'PassengerController@savePassenger');
-Route::post('specialdate/rate/new', 'SpecialDatesController@newSpecialRate');
-Route::post('specialdate/rate/save', 'SpecialDatesController@saveSpecialRates');
-Route::post('specialdate/rate/delete', 'SpecialDatesController@deleteSpecialRates');
-Route::post('mileage/rate/new', 'MileageRateController@newMileageRate');
-Route::post('mileage/rate/save', 'MileageRateController@saveMileageRates');
-Route::post('mileage/rate/delete', 'MileageRateController@deleteMileageRates');
-Route::post('customdate/rate/new', 'CustomDateRateController@newCustomDateRate');
-Route::post('customdate/rate/save', 'CustomDateRateController@saveCustomDateRates');
-Route::post('customdate/rate/delete', 'CustomDateRateController@deleteCustomDateRates');

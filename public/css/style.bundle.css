@@ -10756,27 +10756,27 @@ button.btn {
 
 .btn-brand {
     color: #fff;
-    background-color: #5d78ff;
-    border-color: #5d78ff;
+    background-color: #1a1a27;
+    border-color: #1a1a27;
     color: #ffffff;
 }
 
 .btn-brand:hover {
     color: #fff;
-    background-color: #3758ff;
-    border-color: #2a4eff;
+    background-color: #1a1a27;
+    border-color: #1a1a27;
 }
 
 .btn-brand:focus,
 .btn-brand.focus {
-    box-shadow: 0 0 0 0.2rem rgba(117, 140, 255, 0.5);
+    box-shadow: 0 0 0 0.2rem #1a1a27;
 }
 
 .btn-brand.disabled,
 .btn-brand:disabled {
     color: #fff;
-    background-color: #5d78ff;
-    border-color: #5d78ff;
+    background-color: #1a1a27;
+    border-color: #1a1a27;
 }
 
 .btn-brand:not(:disabled):not(.disabled):active,
@@ -27614,7 +27614,7 @@ strong {
 }
 
 .kt-font-brand {
-    color: #5d78ff !important;
+    color: #1a1a27 !important;
 }
 
 .kt-font-hover-brand:hover {

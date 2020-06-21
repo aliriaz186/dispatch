@@ -82,8 +82,8 @@
             <!-- begin:: Aside -->
             <div class="kt-aside__brand kt-grid__item " id="kt_aside_brand">
                 <div class="kt-aside__brand-logo">
-                    <a href="index.html">
-                        <h3 style="color: white!important;">Dispatcher</h3>
+                    <a href="#">
+                        <h3 style="color: white!important;">Dispatch</h3>
 {{--                        <img alt="Logo" src="{{asset('media/logos/logo-light.png')}}"/>--}}
                     </a>
                 </div>
@@ -103,78 +103,22 @@
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/dashboard" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-clone"></i></span><span
                                     class="kt-menu__link-text">Dashboard</span></a></li>
-                        <li class="kt-menu__item {{ (Request::segment(1) == 'providers') ? 'kt-menu__item--active' : '' }}"
-                            aria-haspopup="true"><a href="{{env('APP_URL')}}/providers" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="fa fa-project-diagram"></i></span><span
-                                    class="kt-menu__link-text">Providers</span></a></li>
+                        <li class="kt-menu__item {{ (Request::segment(1) == 'technicians') ? 'kt-menu__item--active' : '' }}"
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}/technicians" class="kt-menu__link "><span
+                                    class="kt-menu__link-icon"><i class="fa fa-users"></i></span><span
+                                    class="kt-menu__link-text">Technicians</span></a></li>
                         <li class="kt-menu__item {{ (Request::segment(1) == 'jobs') ? 'kt-menu__item--active' : '' }}"
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/jobs" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="far fa-file-alt"></i></span><span
+                                    class="kt-menu__link-icon"><i class="fas fa-briefcase"></i></span><span
                                     class="kt-menu__link-text">Jobs</span></a></li>
-                        <li class="kt-menu__item kt-menu__item--submenu {{ (Request::segment(1) == 'drivers') ? 'kt-menu__item--open' : '' }} {{ (Request::segment(1) == 'cars') ? 'kt-menu__item--open' : '' }}"
-                            aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;"
-                                                                                       class="kt-menu__link kt-menu__toggle"><span
-                                    class="kt-menu__link-icon"><i class="fas fa-car"></i></span><span
-                                    class="kt-menu__link-text">Manage Fleets</span><i
-                                    class="kt-menu__ver-arrow la la-angle-right"></i></a>
-                            <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
-                                <ul class="kt-menu__subnav">
-                                    <li class="kt-menu__item {{ (Request::segment(1) == 'drivers') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/drivers"
-                                                                class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Drivers</span></a></li>
-                                    <li class="kt-menu__item {{ (Request::segment(1) == 'cars') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/cars" class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Fleets</span></a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="kt-menu__item kt-menu__item--submenu {{ (Request::segment(1) == 'rates') ? 'kt-menu__item--open' : '' }}"
-                            aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;"
-                                                                                       class="kt-menu__link kt-menu__toggle"><span
-                                    class="kt-menu__link-icon"><i class="fas fa-pound-sign"></i></span><span
-                                    class="kt-menu__link-text">Manage Rates</span><i
-                                    class="kt-menu__ver-arrow la la-angle-right"></i></a>
-                            <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
-                                <ul class="kt-menu__subnav">
-                                    <li class="kt-menu__item {{ (Request::segment(2) == 'mileage') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/rates/mileage"
-                                                                class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Mileage Rates</span></a></li>
-                                    <li class="kt-menu__item {{ (Request::segment(2) == 'location') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/rates/location"
-                                                                class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Location Rates</span></a></li>
-                                    <li class="kt-menu__item {{ (Request::segment(2) == 'specialdate') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/rates/specialdate"
-                                                                class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Special Date Rates</span></a></li>
-                                    <li class="kt-menu__item {{ (Request::segment(2) == 'customdate') ? 'kt-menu__item--active' : '' }}"
-                                        aria-haspopup="true"><a href="{{env('APP_URL')}}/rates/customdate"
-                                                                class="kt-menu__link "><i
-                                                class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span
-                                                class="kt-menu__link-text">Custom Date Rates</span></a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="kt-menu__item {{ (Request::segment(1) == 'corparates') ? 'kt-menu__item--active' : '' }}"
-                            aria-haspopup="true"><a href="{{env('APP_URL')}}corparates" class="kt-menu__link "><span
+                        <li class="kt-menu__item {{ (Request::segment(1) == 'customers') ? 'kt-menu__item--active' : '' }}"
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}/customers" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-user-tie"></i></span><span
-                                    class="kt-menu__link-text">Corparates</span></a></li>
-                        <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="fas fa-mobile-alt"></i></span><span
-                                    class="kt-menu__link-text">App Settings</span></a></li>
-                        <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="fas fa-cogs"></i></span><span
-                                    class="kt-menu__link-text">Settings</span></a></li>
-                        <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="far fa-bell"></i></span><span
-                                    class="kt-menu__link-text">Notifications</span></a></li>
+                                    class="kt-menu__link-text">Customers</span></a></li>
+                        <li class="kt-menu__item {{ (Request::segment(1) == 'reviews') ? 'kt-menu__item--active' : '' }}"
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}reviews" class="kt-menu__link "><span
+                                    class="kt-menu__link-icon"><i class="fas flaticon-feed"></i></span><span
+                                    class="kt-menu__link-text">Reviews</span></a></li>
                         <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="far fa-chart-bar"></i></span><span
                                     class="kt-menu__link-text">Reports</span></a></li>
@@ -759,7 +703,6 @@
 
             <!-- end:: Header -->
             <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
-            </div>
 
 <script>
     function signout() {

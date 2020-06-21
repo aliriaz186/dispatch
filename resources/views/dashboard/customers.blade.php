@@ -1,4 +1,4 @@
-@extends('dashboard.layout');
+@extends('dashboard/layout')
 @section('content')
     <!-- begin:: Content -->
     <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
@@ -15,17 +15,17 @@
 								<i class="kt-font-brand flaticon-users-1"></i>
 							</span>
                             <h3 class="kt-portlet__head-title">
-                                Drivers
+                                Customers
                             </h3>
                         </div>
                         <div class="kt-portlet__head-toolbar">
                             <div class="kt-portlet__head-wrapper">
                                 <div class="kt-portlet__head-actions">
                                     <div class="dropdown dropdown-inline">
-                                        <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="la la-download"></i> Export
-                                        </button>
+                                        {{--                                        <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle"--}}
+                                        {{--                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                        {{--                                            <i class="la la-download"></i> Export--}}
+                                        {{--                                        </button>--}}
                                         <div class="dropdown-menu dropdown-menu-right">
                                             <ul class="kt-nav">
                                                 <li class="kt-nav__section kt-nav__section--first">
@@ -64,12 +64,6 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    &nbsp;
-                                    <a href="{{env('APP_URL')}}/drivers/new"
-                                       class="btn btn-brand btn-elevate btn-icon-sm">
-                                        <i class="la la-plus"></i>
-                                        New Record
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -78,18 +72,13 @@
 
                         <!--begin: Datatable -->
                         <table class="table table-striped- table-bordered table-hover table-checkable"
-                               id="drivers-table" style="font-size: 13px">
+                               id="technician-table">
                             <thead>
                             <tr>
                                 <th>#ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Address</th>
-                                <th>Car</th>
-                                <th>License</th>
-                                <th>Earnings</th>
-                                <th>Status</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -105,31 +94,26 @@
         <!--End::Dashboard 1-->
     </div>
 
-
     <!-- end:: Content -->
     <script>
         $(document).ready(function() {
-            $('#drivers-table').DataTable({
+            $('#technician-table').DataTable({
                 "autoWidth": true,
                 "responsive": true,
                 "processing": true,
                 "serverSide": true,
+                "order": [],
                 "ajax":{
-                    "url": `{{env('APP_URL')}}/drivers/all`,
+                    "url": `{{env('APP_URL')}}/customers/all`,
                     "dataType": "json",
                     "type": "POST",
                     "data":{ _token: "{{csrf_token()}}"}
                 },
                 "columns": [
-                    { "data": "fleet_auto_id" },
-                    { "data": "fleet_driver_name" },
-                    { "data": "fleet_driver_email" },
-                    { "data": "fleet_driver_phone" },
-                    { "data": "fleet_driver_address"},
-                    { "data": "car" },
-                    { "data": "license" },
-                    { "data": "earnings" },
-                    { "data": "status" },
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "email" },
+                    { "data": "phone" },
                     { "data": "options" }
                 ]
 
