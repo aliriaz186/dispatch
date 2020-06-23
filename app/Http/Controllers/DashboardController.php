@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
-use App\Job;
+use App\DispatchJob;
 use App\Technician;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class DashboardController extends Controller
     {
         $customersCount = Customer::all()->count();
         $technicianCount = Technician::all()->count();
-        $jobsCount = Job::all()->count();
+        $jobsCount = DispatchJob::all()->count();
         return view('dashboard/dashboard')->with(['customersCount' => $customersCount,'technicianCount' => $technicianCount,'jobsCount' => $jobsCount]);
     }
 }

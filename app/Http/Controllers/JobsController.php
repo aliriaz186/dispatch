@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
-use App\Job;
+use App\DispatchJob;
 use App\Technician;
 use Illuminate\Http\Request;
 
@@ -24,7 +24,7 @@ class JobsController extends Controller
             $customer->email = $request->email;
             $customer->phone = $request->phone;
             $customer->save();
-            $job = new Job();
+            $job = new DispatchJob();
             $job->job_address = $request->address;
             $job->lat = $request->lat;
             $job->long = $request->longg;
@@ -53,42 +53,52 @@ class JobsController extends Controller
             4=> 'title',
             5=> 'address',
         );
-        $totalData = Job::count();
+        $totalData = DispatchJob::count();
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
         if(empty($request->input('search.value')))
         {
-            $jobs = Job::offset($start)->limit($limit)->get();
+            $jobs = DispatchJob::offset($start)->limit($limit)->get();
         }
         else {
             $search = $request->input('search.value');
-            $jobs =  Job::where('id','LIKE',"%{$search}%")->orWhere('status', 'LIKE',"%{$search}%")->orWhere('title', 'LIKE',"%{$search}%")->offset($start)->limit($limit)->get();
-            $totalFiltered = Job::where('id','LIKE',"%{$search}%")->orWhere('status', 'LIKE',"%{$search}%")->orWhere('title', 'LIKE',"%{$search}%")->count();
+            $jobs =  DispatchJob::where('id','LIKE',"%{$search}%")->orWhere('status', 'LIKE',"%{$search}%")->orWhere('title', 'LIKE',"%{$search}%")->offset($start)->limit($limit)->get();
+            $totalFiltered = DispatchJob::where('id','LIKE',"%{$search}%")->orWhere('status', 'LIKE',"%{$search}%")->orWhere('title', 'LIKE',"%{$search}%")->count();
         }
         $data = array();
         if(!empty($jobs))
         {
             foreach ($jobs as $job)
             {
-                $nestedData['id'] = $job->id;
+                $customer = Customer::where('id', $job->id_customer)->first();
+                $technician = Technician::where('id', $job->id_technician)->first();
+                $appUrl = env('APP_URL');
+                $nestedData['id'] = "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$job->id</a>";
                 $nestedData['status'] = $job->status;
-                $nestedData['customer'] = Customer::where('id', $job->id_customer)->first()['name'];
-                $nestedData['technician'] =  Technician::where('id', $job->id_technician)->first()['name'];
+                $nestedData['customer'] = "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$customer->name ($customer->phone)</a>";
+                $nestedData['technician'] =  "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$technician->name ($technician->phone)</a>";
                 $nestedData['title'] =  $job->title;
                 $nestedData['address'] =  $job->job_address;
                 $data[] = $nestedData;
             }
         }
 
-        $json_data = array(
+        $jsonData = array(
             "draw"            => intval($request->input('draw')),
             "recordsTotal"    => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
             "data"            => $data
         );
 
-        echo json_encode($json_data);
+        echo json_encode($jsonData);
+    }
+
+    public function getJobDetails(int $jobId){
+        $job = DispatchJob::where('id', $jobId)->first();
+        $customer = Customer::where('id', $job->id_customer)->first();
+        $technician = Technician::where('id', $job->id_technician)->first();
+        return view('dashboard.job-details')->with(['job' => $job, 'customer' => $customer, 'technician' => $technician]);
     }
 
 }

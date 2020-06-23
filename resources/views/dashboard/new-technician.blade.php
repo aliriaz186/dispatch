@@ -81,7 +81,7 @@
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
                                         <input type="text" name="address" id="address"
-                                               class="form-control" placeholder="Enter address" readonly>
+                                               class="form-control" placeholder="Enter address" onkeypress="codeAddress(event)">
                                     </div>
                                 </div>
                             </div>
@@ -123,6 +123,7 @@
 
                 </div>
             </div>
+            <img src="{{asset('img/technician.png')}}" style="display: none" id="technician-icon">
         </form>
 
         <script>
@@ -137,7 +138,7 @@
                 });
                  geocoder = new google.maps.Geocoder;
                 infoWindow = new google.maps.InfoWindow;
-
+                getTechnicianMarkerts();
 
                 google.maps.event.addListener(map, 'click', function(event) {
                     //Get the location that the user clicked.
@@ -170,6 +171,55 @@
             function moveToLocation(lat, lng){
                 var center = new google.maps.LatLng(lat, lng);
                 map.panTo(center);
+            }
+
+            function codeAddress(event) {
+                if (event.key !== "Enter"){
+                    return;
+                }
+                event.preventDefault();
+                geocoder = new google.maps.Geocoder();
+                let address = document.getElementById("address").value;
+                geocoder.geocode( { 'address': address}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        let gotlat = results[0].geometry.location.lat();
+                        let gotlong = results[0].geometry.location.lng();
+                        moveToLocation(gotlat, gotlong);
+                        document.getElementById('lat').value = gotlat;
+                        document.getElementById('longg').value = gotlong;
+                        let markernew = new google.maps.Marker({
+                            position: new google.maps.LatLng(gotlat, gotlong),
+                            map: map,
+                            title: 'Technician Location'
+                        });
+                    }
+                    else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
+
+            function getTechnicianMarkerts() {
+                $.ajax({
+                    url: `{{env('APP_URL')}}/api/technicians/get`,
+                    type: 'GET',
+                    dataType: "JSON",
+                    beforeSend: function () {
+                        $('#main-form').append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
+                    },
+                    success: function (result) {
+                        let techniciansList = result;
+                        for(let i=0;i<techniciansList.length;i++){
+                            var myLatLng = {lat: parseFloat(techniciansList[i].lat)  , lng: parseFloat(techniciansList[i].longg)};
+                            var mymarker = new google.maps.Marker({
+                                position: myLatLng,
+                                title:techniciansList[i].name,
+                                icon: document.getElementById('technician-icon').getAttribute('src'),
+                            });
+                            mymarker.setMap(map);
+                        }
+                    }
+                });
             }
 
             function markerLocation(){

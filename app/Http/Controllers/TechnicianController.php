@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\TechnicianInvitationJob;
 use App\Technician;
 use Illuminate\Http\Request;
+use services\email_services\EmailAddress;
 
 class TechnicianController extends Controller
 {
@@ -38,7 +40,9 @@ class TechnicianController extends Controller
             } else {
                 $technician->password = "12345";
             }
-            return json_encode(['status' => $technician->save()]);
+            $result = $technician->save();
+            TechnicianInvitationJob::dispatch(new EmailAddress($technician->email), $technician->password);
+            return json_encode(['status' => $result]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
         }
@@ -104,8 +108,9 @@ class TechnicianController extends Controller
         {
             foreach ($providers as $provider)
             {
-                $nestedData['id'] = $provider->id;
-                $nestedData['name'] = $provider->name;
+                $appUrl = env('APP_URL');
+                $nestedData['id'] = "<a href='$appUrl/technician/$provider->id/details' style='color: #5d78ff'>$provider->id</a>";
+                $nestedData['name'] =  "<a href='$appUrl/technician/$provider->id/details' style='color: #5d78ff'>$provider->name</a>";
                 $nestedData['email'] = $provider->email;
                 $nestedData['phone'] = $provider->phone;
                 $nestedData['address'] =  $provider->address;

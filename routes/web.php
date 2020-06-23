@@ -38,4 +38,5 @@ Route::get('customers', 'CustomerController@getView');
 Route::post('customers/all', 'CustomerController@getAll');
 Route::get('customers/manage/{id}', 'CustomerController@manage');
 Route::post('customer/update', 'CustomerController@update');
+Route::get('jobs/{id}/details', 'JobsController@getJobDetails');
 
