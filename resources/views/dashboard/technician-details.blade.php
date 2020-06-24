@@ -8,17 +8,28 @@
         <!--Begin::Row-->
         <form action="#" method="POST" id="listing_form" class="form-horizontal listing_form">
             {{ csrf_field() }}
-            <div class="row">
 
+            <div class="row" style="margin-bottom: 10px!important;">
+                <div  class="col-xl-12 order-lg-12 order-xl-12">
+                    <div>
+                        <a style="float: right" href="{{env('APP_URL')}}/technicians/{{$technician->id}}/jobs/new"
+                             class="btn btn-brand btn-elevate btn-icon-sm">
+                            <i class="la la-plus"></i>
+                            Add Job
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-xl-6 order-lg-6 order-xl-6">
                     <div class="kt-portlet kt-portlet--mobile">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                             <span class="kt-portlet__head-icon">
-                                <i class="kt-font-brand fas fa-briefcase"></i>
+                                <i class="kt-font-brand fas fa-user"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    {{$job->title}}
+                                    {{$technician->name}}
                                 </h3>
                             </div>
                         </div>
@@ -27,102 +38,35 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                   Job Description
+                                    Company Info
                                 </h3>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> {{$job->description}} </p>
+                                    <p><i class="fas fa-user mr-1"></i> {{$technician->name}} </p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <p> {{$job->service_type}} </p>
+                                    <p><i class="fas flaticon-email mr-1"></i>  {{$technician->email}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><i class="fas fa-phone mr-1"></i> {{$technician->phone}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><i class="fas fa-location-arrow mr-1"></i>  {{$technician->address}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><i class="fas flaticon2-website mr-1"></i>  {{$technician->website}} </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
+                        <div class="kt-portlet__head kt-portlet__head--lg" style="padding: 0px !important;">
                             <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Customer
-                                </h3>
                             </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$customer->name}} </p>
-                                    <p> {{$customer->email}} </p>
-                                    <p> {{$customer->phone}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Customer Availability
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$job->customer_availability_one}} </p>
-                                    <p> {{$job->customer_availability_two}} </p>
-                                    <p> {{$job->customer_availability_three}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Notes
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$job->notes}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Technician
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->name}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->email}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->phone}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->address}} </p>
-                                </div>
-                            </div>
+                            <div id="map" style="height:541px!important;width:100%;"></div>
                         </div>
                     </div>
                     <div class="kt-portlet kt-portlet--mobile">
@@ -147,33 +91,26 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                             <span class="kt-portlet__head-icon">
-                                <i class="kt-font-brand fas fa-briefcase"></i>
+                                <i class="kt-font-brand fas fa-cog"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Job Location ({{$job->job_address}})
+                                    Settings
                                 </h3>
                             </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg" style="padding: 0px !important;">
-                            <div class="kt-portlet__head-label">
-                            </div>
-                                <div id="map" style="height:541px!important;width:100%;"></div>
                         </div>
                     </div>
                     <div class="kt-portlet kt-portlet--mobile">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Job Status
+                                    User
                                 </h3>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> {{$job->status}} </p>
+                                    <p> Comming Soon </p>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +119,39 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Activity of Job
+                                    Activity
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p> Comming Soon </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Jobs
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p> Comming Soon </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Reviews
                                 </h3>
                             </div>
                         </div>
@@ -198,8 +167,8 @@
             </div>
 
         </form>
-        <p id="long" style="display: none">{{$job->long}}</p>
-        <p id="lat" style="display: none">{{$job->lat}}</p>
+        <p id="long" style="display: none">{{$technician->longg}}</p>
+        <p id="lat" style="display: none">{{$technician->lat}}</p>
         <script>
             let marker = false; ////Has the user plotted their location marker?
             let lati = parseFloat(document.getElementById('lat').innerText);

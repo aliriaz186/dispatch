@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\DispatchJob;
+use App\Jobs\CustomerJobCreatedEmail;
 use App\Technician;
 use Illuminate\Http\Request;
+use services\email_services\EmailAddress;
 
 class JobsController extends Controller
 {
@@ -38,7 +40,9 @@ class JobsController extends Controller
             $job->customer_availability_three = $request->customer_availability_three;
             $job->notes = $request->notes;
             $job->status = "offered";
-            return json_encode(['status' => $job->save()]);
+            $result = $job->save();
+            CustomerJobCreatedEmail::dispatch(new EmailAddress($customer->email), $job->id);
+            return json_encode(['status' => $result]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
         }

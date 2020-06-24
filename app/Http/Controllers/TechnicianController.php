@@ -18,8 +18,18 @@ class TechnicianController extends Controller
         return view('dashboard.technician');
     }
 
+    public function getTechnicianDetails(int $id){
+        $technician = Technician::where('id', $id)->first();
+        return view('dashboard.technician-details')->with(['technician' => $technician]);
+    }
+
     public function newTechnicianView(){
         return view('dashboard.new-technician');
+    }
+
+    public function addNewJob(int $id){
+        $technician = Technician::where('id', $id)->first();
+        return view('dashboard.technician-new-job')->with(['technician' => $technician]);
     }
 
     public function saveTechnician(Request $request){
@@ -109,8 +119,8 @@ class TechnicianController extends Controller
             foreach ($providers as $provider)
             {
                 $appUrl = env('APP_URL');
-                $nestedData['id'] = "<a href='$appUrl/technician/$provider->id/details' style='color: #5d78ff'>$provider->id</a>";
-                $nestedData['name'] =  "<a href='$appUrl/technician/$provider->id/details' style='color: #5d78ff'>$provider->name</a>";
+                $nestedData['id'] = "<a href='$appUrl/technicians/$provider->id/details' style='color: #5d78ff'>$provider->id</a>";
+                $nestedData['name'] =  "<a href='$appUrl/technicians/$provider->id/details' style='color: #5d78ff'>$provider->name</a>";
                 $nestedData['email'] = $provider->email;
                 $nestedData['phone'] = $provider->phone;
                 $nestedData['address'] =  $provider->address;

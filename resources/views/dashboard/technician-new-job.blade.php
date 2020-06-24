@@ -17,7 +17,7 @@
                                 <i class="kt-font-brand fas fa-briefcase"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title">
-                                    New Job
+                                    New Job => {{$technician->name}}
                                 </h3>
                             </div>
                         </div>
@@ -37,9 +37,9 @@
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fas fa-user"></i></span></div>
                                     <input type="text" name="technician_name" id="technician_name"
-                                           class="form-control" placeholder="Select technician from map" readonly>
+                                           class="form-control" placeholder="Select technician from map" readonly value="{{$technician->name}}">
                                     <input type="text" name="technician_id" id="technician_id"
-                                           class="form-control" style="display: none">
+                                           class="form-control" style="display: none" value="{{$technician->id}}">
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -131,7 +131,7 @@
                                     <div class="col-lg-6">
                                         <button type="submit" class="btn btn-primary">Create Job</button>
                                         |
-                                        <a href="{{env('APP_URL')}}/jobs" class="btn btn-warning">Go Back</a>
+                                        <a href="{{env('APP_URL')}}/technicians/{{$technician->id}}/details" class="btn btn-warning">Go Back</a>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                                 <i class="kt-font-brand fas fa-map"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title">
-                                    Select Address of job and nearby technician from map
+                                    Select address of job
                                 </h3>
                             </div>
                         </div>
@@ -162,7 +162,9 @@
                 <img src="{{asset('img/technician.png')}}" style="display: none" id="technician-icon">
             </div>
         </form>
-
+        <p id="tec-long" style="display: none">{{$technician->longg}}</p>
+        <p id="tec-lat" style="display: none">{{$technician->lat}}</p>
+        <p id="tec-name" style="display: none">{{$technician->name}}</p>
         <script>
             var marker = false; ////Has the user plotted their location marker?
             var lati = 25.785257;
@@ -270,37 +272,20 @@
             }
 
             function getTechnicianMarkerts() {
-                $.ajax({
-                    url: `{{env('APP_URL')}}/api/technicians/get`,
-                    type: 'GET',
-                    dataType: "JSON",
-                    beforeSend: function () {
-                        $('#main-form').append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-                    },
-                    success: function (result) {
-                        let techniciansList = result;
-                        for(let i=0;i<techniciansList.length;i++){
-                            console.log(techniciansList[i].lat)
-                            var myLatLng = {lat: parseFloat(techniciansList[i].lat)  , lng: parseFloat(techniciansList[i].longg)};
-                            var mymarker = new google.maps.Marker({
-                                position: myLatLng,
-                                title:techniciansList[i].name,
-                                icon: document.getElementById('technician-icon').getAttribute('src'),
-                            });
-                            mymarker.setMap(map);
-                            mymarker.addListener('click', function (event) {
-                                 document.getElementById('technician_name').value=techniciansList[i].name;
-                                 document.getElementById('technician_id').value=techniciansList[i].id;
-                            });
-                        }
-                    }
-                });
+                    var myLatLng = {lat: parseFloat(document.getElementById('tec-lat').innerText)  , lng: parseFloat(document.getElementById('tec-long').innerText)};
+                    var mymarker = new google.maps.Marker({
+                        position: myLatLng,
+                        title:document.getElementById('tec-name').innerText,
+                        icon: document.getElementById('technician-icon').getAttribute('src'),
+                    });
+                    mymarker.setMap(map);
+                document.getElementById('technician_name').value=document.getElementById('tec-name').innerText;
             }
 
         </script>
-                <script async defer
-                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqJcwaHOlWKivApYFYSjmVobGeKFqGdE&callback=initMap">
-                </script>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqJcwaHOlWKivApYFYSjmVobGeKFqGdE&callback=initMap">
+        </script>
     </div>
     <script>
 
