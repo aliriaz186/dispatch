@@ -7,7 +7,7 @@
              <div class="kt-widget14">
                  <div class="kt-widget14__header kt-margin-b-30">
                      <h3 class="text-center">
-                        Total Technicians
+                        Total Service Providers
                      </h3>
                  </div>
                 <h3 class="text-center">{{$technicianCount}}+</h3>

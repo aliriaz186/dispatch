@@ -98,7 +98,7 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Technician
+                                    Providers
                                 </h3>
                             </div>
                         </div>

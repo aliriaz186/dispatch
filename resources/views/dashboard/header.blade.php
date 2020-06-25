@@ -107,7 +107,7 @@
                         <li class="kt-menu__item {{ (Request::segment(1) == 'technicians') ? 'kt-menu__item--active' : '' }}"
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/technicians" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fa fa-users"></i></span><span
-                                    class="kt-menu__link-text">Technicians</span></a></li>
+                                    class="kt-menu__link-text">Service Providers</span></a></li>
                         <li class="kt-menu__item {{ (Request::segment(1) == 'jobs') ? 'kt-menu__item--active' : '' }}"
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/jobs" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-briefcase"></i></span><span

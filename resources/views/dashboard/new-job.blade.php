@@ -37,7 +37,7 @@
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fas fa-user"></i></span></div>
                                     <input type="text" name="technician_name" id="technician_name"
-                                           class="form-control" placeholder="Select technician from map" readonly>
+                                           class="form-control" placeholder="Select nearby provider from map" readonly>
                                     <input type="text" name="technician_id" id="technician_id"
                                            class="form-control" style="display: none">
                                 </div>
@@ -147,7 +147,7 @@
                                 <i class="kt-font-brand fas fa-map"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title">
-                                    Select Address of job and nearby technician from map
+                                    Select Address of job and nearby provider from map
                                 </h3>
                             </div>
                         </div>
