@@ -8,12 +8,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 class EmailSender
 {
     private $phpMail;
-    private $smtpAccount;
 
     public function __construct(PhpMail $phpMail)
     {
         $this->phpMail = $phpMail;
-        $this->smtpAccount = config('smtp.gmail');
     }
 
     public function send(EmailMessage $emailMessage)
@@ -23,15 +21,15 @@ class EmailSender
         try {
             $mail->isSMTP();
             $mail->SMTPDebug = 0;
-            $mail->Host = $this->smtpAccount['Host'];
-            $mail->Port = $this->smtpAccount['Port'];
-            $mail->SMTPSecure = $this->smtpAccount['SMTPSecure'];
-            $mail->SMTPAutoTLS = $this->smtpAccount['SMTPAutoTLS'];
+            $mail->Host = env('MAIL_HOST');
+            $mail->Port =  env('MAIL_PORT');
+            $mail->SMTPSecure = 'tls';
+            $mail->SMTPAutoTLS = false;
             $mail->SMTPAuth = true;
-            $mail->Timeout = $this->smtpAccount['Timeout'];
-            $mail->Username = $this->smtpAccount['Username'];
-            $mail->Password = $this->smtpAccount['Password'];
-            $mail->setFrom($this->smtpAccount['From']);
+            $mail->Timeout = 5;
+            $mail->Username = env('MAIL_USERNAME');
+            $mail->Password = env('MAIL_PASSWORD');
+            $mail->setFrom(env('MAIL_FROM_NAME'));
             if(!empty(($emailMessage->getAttachment()))){
                 $mail->addAttachment($emailMessage->getAttachment());
             }
