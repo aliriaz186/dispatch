@@ -29,7 +29,7 @@ class EmailSender
             $mail->Timeout = 5;
             $mail->Username = env('MAIL_USERNAME');
             $mail->Password = env('MAIL_PASSWORD');
-            $mail->setFrom(env('MAIL_FROM_NAME'));
+            $mail->setFrom("support@dispatch.com");
             if(!empty(($emailMessage->getAttachment()))){
                 $mail->addAttachment($emailMessage->getAttachment());
             }
