@@ -6,8 +6,17 @@ use App\Customer;
 use App\DispatchJob;
 use App\Jobs\CustomerJobCreatedEmail;
 use App\Technician;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use services\email_messages\JobCreationMessage;
 use services\email_services\EmailAddress;
+use services\email_services\EmailBody;
+use services\email_services\EmailMessage;
+use services\email_services\EmailSender;
+use services\email_services\EmailSubject;
+use services\email_services\MailConf;
+use services\email_services\PhpMail;
+use services\email_services\SendEmailService;
 
 class JobsController extends Controller
 {
@@ -41,7 +50,16 @@ class JobsController extends Controller
             $job->notes = $request->notes;
             $job->status = "offered";
             $result = $job->save();
-            CustomerJobCreatedEmail::dispatch(new EmailAddress($customer->email), $job->id);
+//            CustomerJobCreatedEmail::dispatch(new EmailAddress($customer->email), $job->id);
+            $subject = new SendEmailService(new EmailSubject("Hi, Your job has been Created in "."   ". env('APP_NAME')));
+            $this->jobId = JWT::encode(['jobId' => $job->id], 'dispatchEncodeSecret-2020');
+            $mailTo = new EmailAddress($customer->email);
+            $invitationMessage = new JobCreationMessage();
+            $emailBody = $invitationMessage->creationMessage($this->jobId);
+            $body = new EmailBody($emailBody);
+            $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
+            $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
+            $result = $sendEmail->send($emailMessage);
             return json_encode(['status' => $result]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
