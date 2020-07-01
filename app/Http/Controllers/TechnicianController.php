@@ -5,7 +5,15 @@ namespace App\Http\Controllers;
 use App\Jobs\TechnicianInvitationJob;
 use App\Technician;
 use Illuminate\Http\Request;
+use services\email_messages\InvitationMessageBody;
 use services\email_services\EmailAddress;
+use services\email_services\EmailBody;
+use services\email_services\EmailMessage;
+use services\email_services\EmailSender;
+use services\email_services\EmailSubject;
+use services\email_services\MailConf;
+use services\email_services\PhpMail;
+use services\email_services\SendEmailService;
 
 class TechnicianController extends Controller
 {
@@ -51,7 +59,16 @@ class TechnicianController extends Controller
                 $technician->password = "12345";
             }
             $result = $technician->save();
-            TechnicianInvitationJob::dispatch(new EmailAddress($technician->email), $technician->password);
+//            TechnicianInvitationJob::dispatch(new EmailAddress($technician->email), $technician->password);
+            $subject = new SendEmailService(new EmailSubject("You are invited you to join"."   ". env('APP_NAME')));
+            $mailTo = new EmailAddress($technician->email);
+            $this->password = $technician->password;
+            $invitationMessage = new InvitationMessageBody();
+            $emailBody = $invitationMessage->invitationMessageBody($this->password);
+            $body = new EmailBody($emailBody);
+            $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
+            $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
+            $result = $sendEmail->send($emailMessage);
             return json_encode(['status' => $result]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
