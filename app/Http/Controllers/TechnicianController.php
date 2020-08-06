@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\TechnicianInvitationJob;
 use App\Technician;
+use http\Client;
 use Illuminate\Http\Request;
 use services\email_messages\InvitationMessageBody;
 use services\email_services\EmailAddress;
@@ -69,6 +70,7 @@ class TechnicianController extends Controller
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
+            $this->sendMessage($request->phone, "You are invited to use ".env('APP_NAME') ."\nPlease Login to start your business\n" . "Your Password is  : .$this->password.\n" . env('TECHNICIAN_URL'));
             return json_encode(['status' => $result]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
@@ -100,6 +102,14 @@ class TechnicianController extends Controller
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
         }
+    }
+
+    public function sendMessage($recipients, $message){
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        $client = new \Twilio\Rest\Client($account_sid, $auth_token);
+        $client->messages->create($recipients, ['from' => $twilio_number, 'body' => $message]);
     }
 
     public function manageTechnician(int $id){

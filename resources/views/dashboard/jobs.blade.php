@@ -1,11 +1,6 @@
 @extends('dashboard/layout')
 @section('content')
-    <!-- begin:: Content -->
     <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
-
-        <!--Begin::Dashboard 1-->
-
-        <!--Begin::Row-->
         <div class="row">
             <div class="col-xl-12 order-lg-12 order-xl-12">
                 <div class="kt-portlet kt-portlet--mobile">
