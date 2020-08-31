@@ -17,13 +17,13 @@
                                 <i class="kt-font-brand fas fa-briefcase"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title">
-                                    New Job => {{$technician->name}}
+                                    New Claim => {{$technician->name}}
                                 </h3>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div class="col-lg-12">
-                                <label>Job Address <span class="text-danger">*</span></label>
+                                <label>Claim Address <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fas fa-map-marker-alt"></i></span></div>
@@ -43,19 +43,108 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label class="">Job Title <span class="text-danger">*</span></label>
+                                <label>City <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                                class="fas fa-map-marker-alt"></i></span></div>
+                                    <input type="text" name="city" id="city"
+                                           class="form-control" placeholder="Enter city">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Estate <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                                class="fas fa-map-marker-alt"></i></span></div>
+                                    <input type="text" name="estate" id="estate"
+                                           class="form-control" placeholder="Enter estate">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Zip Code <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    <input type="text" name="zipCode" id="zipCode"
+                                           class="form-control" placeholder="Enter zip code">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Policy No <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    <input type="text" name="policyNo" id="policyNo"
+                                           class="form-control" placeholder="Enter policy no">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Item Type <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    <input type="text" name="itemType" id="itemType"
+                                           class="form-control" placeholder="Enter item type">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Item Location <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                                class="fas fa-map-marker-alt"></i></span></div>
+                                    <input type="text" name="itemLocation" id="itemLocation"
+                                           class="form-control" placeholder="Enter item location">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Issue Details <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    <input type="text" name="issueDetails" id="issueDetails"
+                                           class="form-control" placeholder="Enter issue details">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Model No <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    <input type="text" name="modelNo" id="modelNo"
+                                           class="form-control" placeholder="Enter model no">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Serial No <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"></span></div>--}}
+                                    <input type="text" name="serialNo" id="serialNo"
+                                           class="form-control" placeholder="Enter serial no">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Prior Issue <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="row col-lg-12 mt-1">
+                                        <input id="priorIssueYes" name="priorIssue" type="radio"><span style="margin-top: -3px;margin-left: 6px;">Yes</span>
+                                        <input id="priorIssueNo" name="priorIssue" style="margin-left: 18px" type="radio"><span style="margin-top: -3px;margin-left: 6px;">No</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label class="">Claim Title <span class="text-danger">*</span></label>
                                 <input type="text" name="title" id="title" class="form-control"
-                                       placeholder="Enter job title">
+                                       placeholder="Enter claim title">
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label class="">Job Description <span class="text-danger">*</span></label>
+                                <label class="">Claim Description <span class="text-danger">*</span></label>
                                 <input type="text" name="description" id="description" class="form-control"
-                                       placeholder="Enter job description">
+                                       placeholder="Enter claim description">
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label class="">Job Service Type <span class="text-danger">*</span></label>
+                                <label class="">Claim Service Type <span class="text-danger">*</span></label>
                                 <input type="text" name="service_type" id="service_type" class="form-control"
-                                       placeholder="Enter job service type">
+                                       placeholder="Enter claim service type">
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label class="">Customer Name <span class="text-danger">*</span></label>
@@ -97,7 +186,7 @@
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fa fa-calendar-times"></i></span></div>
-                                    <input type="datetime-local" name="customer_availability_one" id="customer_availability_one"
+                                    <input type="datetime-local" name="customer_availability_two" id="customer_availability_two"
                                            class="form-control"
                                            placeholder="">
                                 </div>
@@ -107,7 +196,7 @@
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fa fa-calendar-times"></i></span></div>
-                                    <input type="datetime-local" name="customer_availability_one" id="customer_availability_one"
+                                    <input type="datetime-local" name="customer_availability_three" id="customer_availability_three"
                                            class="form-control"
                                            placeholder="">
                                 </div>
@@ -122,6 +211,13 @@
                                            placeholder="enter notes (optional)">
                                 </div>
                             </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label for="offer-images">Select multiple images to upload: </label>
+                                <div class="input-group">
+                                    <input id="offer-images" onclick="selectImages()" type="file" name="images[]"
+                                           multiple/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="kt-portlet kt-portlet--mobile">
@@ -129,7 +225,7 @@
                             <div class="kt-form__actions">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <button type="submit" class="btn btn-primary">Create Job</button>
+                                        <button type="submit" class="btn btn-primary">Create Claim</button>
                                         |
                                         <a href="{{env('APP_URL')}}/technicians/{{$technician->id}}/details" class="btn btn-warning">Go Back</a>
                                     </div>
@@ -147,7 +243,7 @@
                                 <i class="kt-font-brand fas fa-map"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title">
-                                    Select address of job
+                                    Select address of Claim
                                 </h3>
                             </div>
                         </div>
@@ -165,6 +261,60 @@
         <p id="tec-long" style="display: none">{{$technician->longg}}</p>
         <p id="tec-lat" style="display: none">{{$technician->lat}}</p>
         <p id="tec-name" style="display: none">{{$technician->name}}</p>
+
+        <script type="text/javascript">
+            window.onbeforeunload = function () {
+                return 'Are you really want to perform the action?';
+            }
+        </script>
+
+        <script type="text/javascript">
+
+            // window.addEventListener('onbeforeunload', function (e) {
+            //     alert('hi')
+            //     // e.preventDefault();
+            //     e.returnValue = '';
+            // });
+            function selectImages() {
+                if (window.File && window.FileList && window.FileReader) {
+                    var filesInput = document.getElementById("offer-images");
+
+                    filesInput.addEventListener("change", function (event) {
+                        var files = [];
+                        files = event.target.files; //FileList object
+                        var output = document.getElementById("result");
+                        for (var i = 0; i < files.length; i++) {
+                            var file = files[i];
+
+                            //Only pics
+                            if (!file.type.match('image'))
+                                continue;
+
+                            var picReader = new FileReader();
+
+                            picReader.addEventListener("load", function (event) {
+
+                                var picFile = event.target;
+
+                                var div = document.createElement("span");
+
+                                div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+                                    "title='" + picFile.name + "'/>";
+
+                                output.insertBefore(div, null);
+
+                            });
+
+                            //Read the image
+                            picReader.readAsDataURL(file);
+                        }
+
+                    });
+                } else {
+                    console.log("Your browser does not support File API");
+                }
+            }</script>
+
         <script>
             var marker = false; ////Has the user plotted their location marker?
             var lati = 25.785257;
@@ -288,7 +438,7 @@
         </script>
     </div>
     <script>
-
+        let radioButtonPrior;
         $(document).ready(function () {
             KTApp.blockPage({
                 baseZ: 2000,
@@ -308,6 +458,15 @@
                     // Specify validation rules
                     rules: {
                         address: {required: true},
+                        city: {required: true},
+                        estate: {required: true},
+                        zipCode: {required: true},
+                        policyNo: {required: true},
+                        itemType: {required: true},
+                        itemLocation: {required: true},
+                        issueDetails: {required: true},
+                        modelNo: {required: true},
+                        serialNo: {required: true},
                         technician_name: {required: true},
                         title: {required: true},
                         description: {required: true},
@@ -320,6 +479,15 @@
                     // Specify validation error messages
                     messages: {
                         address: "Please enter address",
+                        city: "Please enter city",
+                        estate: "Please enter estate",
+                        zipCode: "Please enter zip code",
+                        policyNo: "Please enter policy no",
+                        itemType: "Please enter item type",
+                        itemLocation: "Please enter item location",
+                        issueDetails: "Please enter issue details",
+                        modelNo: "Please enter model no",
+                        serialNo: "Please enter serial no",
                         technician_name: "Please select technician from map",
                         title: "Please enter title",
                         description: "Please enter description",
@@ -346,6 +514,28 @@
                     // Here we submit the completed form to database
                     submitHandler: function (form, e) {
                         // Enable Page Loading
+                        if (document.getElementById('priorIssueYes').checked === false && document.getElementById('priorIssueNo').checked === false) {
+                            swal.fire({
+                                "title": "",
+                                "text": "Please select prior issue",
+                                "type": "error",
+                                "confirmButtonClass": "btn btn-secondary",
+                                "onClose": function (e) {
+                                    console.log('on close event fired!');
+                                }
+                            })
+                            event.preventDefault();
+                            return;
+                        }
+                        if(document.getElementById('priorIssueYes').checked === true)
+                        {
+                            radioButtonPrior = 'Yes';
+                        }
+                        if(document.getElementById('priorIssueNo').checked === true)
+                        {
+                            radioButtonPrior = 'No';
+                        }
+
                         KTApp.blockPage({
                             baseZ: 2000,
                             overlayColor: '#000000',
@@ -356,6 +546,10 @@
                         });
                         var form = $('.listing_form');
                         var data = form.serializeArray();
+                        data.push({
+                            "name": "radioButtonPrior",
+                            "value": radioButtonPrior
+                        });
                         e.preventDefault();
                         e.stopImmediatePropagation();
                         $.ajax({
@@ -365,22 +559,63 @@
                             data: data,
                             success: function (result) {
                                 if (result['status']) {
+                                    var offerImages = document.getElementById('offer-images').files;
+
+                                    let formData = new FormData();
+                                    for (var i = 0; i < offerImages.length; i++) {
+                                        formData.append("offer_images[]", offerImages[i]);
+                                    }
+                                    formData.append("jobId", result['job_id']);
+                                    formData.append("_token", "{{ csrf_token() }}");
+                                    // document.getElementById('send-email-btn').setAttribute('disabled', true);
+                                    $.ajax
+                                    ({
+                                        type: 'POST',
+                                        url: `{{env('APP_URL')}}/job/images/save`,
+                                        data: formData,
+                                        contentType: false,
+                                        cache: false,
+                                        processData: false,
+                                        success: function (data) {
+                                            setTimeout(function () {
+                                                KTApp.unblockPage();
+                                            }, 1000);
+                                            setTimeout(function () {
+                                                swal.fire({
+                                                    "title": "",
+                                                    "text": "Saved Successfully",
+                                                    "type": "success",
+                                                    "showConfirmButton": false,
+                                                    "timer": 1500,
+                                                    "onClose": function (e) {
+                                                        window.location.href = `{{env('APP_URL')}}/jobs`
+                                                    }
+                                                })
+                                            }, 2000);
+                                        },
+                                        error: function (data) {
+                                            checkBoxesArray = [];
+                                            setTimeout(function () {
+                                                KTApp.unblockPage();
+                                            }, 1000);
+                                            setTimeout(function () {
+                                                swal.fire({
+                                                    "title": "",
+                                                    "text": result['message'],
+                                                    "type": "error",
+                                                    "confirmButtonClass": "btn btn-secondary",
+                                                    "onClose": function (e) {
+                                                        console.log('on close event fired!');
+                                                    }
+                                                })
+                                            }, 2000);
+                                        }
+                                    });
+
+
+
                                     // Disable Page Loading and show confirmation
-                                    setTimeout(function () {
-                                        KTApp.unblockPage();
-                                    }, 1000);
-                                    setTimeout(function () {
-                                        swal.fire({
-                                            "title": "",
-                                            "text": "Saved Successfully",
-                                            "type": "success",
-                                            "showConfirmButton": false,
-                                            "timer": 1500,
-                                            "onClose": function (e) {
-                                                window.location.href = `{{env('APP_URL')}}/jobs`
-                                            }
-                                        })
-                                    }, 2000);
+
                                 } else {
                                     setTimeout(function () {
                                         KTApp.unblockPage();

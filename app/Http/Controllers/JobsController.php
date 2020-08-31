@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\ClaimFollowUp;
 use App\Customer;
 use App\DispatchJob;
+use App\JobCompletionStatus;
+use App\JobImages;
+use App\JobRating;
 use App\Jobs\CustomerJobCreatedEmail;
 use App\Technician;
 use Firebase\JWT\JWT;
@@ -37,6 +41,16 @@ class JobsController extends Controller
             $customer->save();
             $job = new DispatchJob();
             $job->job_address = $request->address;
+            $job->city = $request->city;
+            $job->estate = $request->estate;
+            $job->zip_code = $request->zipCode;
+            $job->policy_no = $request->policyNo;
+            $job->item_type = $request->itemType;
+            $job->item_location = $request->itemLocation;
+            $job->issue_details = $request->issueDetails;
+            $job->model_no = $request->modelNo;
+            $job->serial_no = $request->serialNo;
+            $job->prior_issue = $request->radioButtonPrior;
             $job->lat = $request->lat;
             $job->long = $request->longg;
             $job->id_technician = $request->technician_id;
@@ -51,7 +65,7 @@ class JobsController extends Controller
             $job->status = "offered";
             $result = $job->save();
 //            CustomerJobCreatedEmail::dispatch(new EmailAddress($customer->email), $job->id);
-            $subject = new SendEmailService(new EmailSubject("Hi, Your job has been Created in "."   ". env('APP_NAME')));
+            $subject = new SendEmailService(new EmailSubject("Hi, Your claim has been Created by ".env('APP_NAME')));
             $this->jobId = JWT::encode(['jobId' => $job->id], 'dispatchEncodeSecret-2020');
             $mailTo = new EmailAddress($customer->email);
             $invitationMessage = new JobCreationMessage();
@@ -60,10 +74,27 @@ class JobsController extends Controller
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
-            $this->sendMessage($request->phone, "Your claim has been created in ".env('APP_NAME') ."\nYou can track it by following this link.\n" . env('TECHNICIAN_URL'). "/job/".$this->jobId."/track");
-            return json_encode(['status' => $result]);
+//            $this->sendMessage($request->phone, "Your claim has been created in ".env('APP_NAME') ."\nYou can track it by following this link.\n" . env('TECHNICIAN_URL'). "/job/".$this->jobId."/track");
+            return json_encode(['status' => $result,'job_id' => $job->id]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
+        }
+    }
+
+    public function saveImages(Request $request)
+    {
+        if ($request->hasfile('offer_images')) {
+            $images = "";
+            $files = $request->file('offer_images');
+            foreach ($files as $key => $file) {
+                $key = $key + 1;
+                $name = time() . "-{$key}." . $file->getClientOriginalExtension();
+                $file->move(public_path() . '/job-files/', $name);
+                $jobImages = new JobImages();
+                $jobImages->job_id = $request->jobId;
+                $jobImages->image = $name;
+                $jobImages->save();
+            }
         }
     }
 
@@ -129,7 +160,23 @@ class JobsController extends Controller
         $job = DispatchJob::where('id', $jobId)->first();
         $customer = Customer::where('id', $job->id_customer)->first();
         $technician = Technician::where('id', $job->id_technician)->first();
-        return view('dashboard.job-details')->with(['job' => $job, 'customer' => $customer, 'technician' => $technician]);
+        $jobImages = JobImages::where('job_id', $jobId)->get();
+        $followUp = ClaimFollowUp::where('job_id', $jobId)->first();
+        $jobCompletionStatus = JobCompletionStatus::where('job_id', $jobId)->first();
+        $ratings = JobRating::where('jobId', $jobId)->first();
+        return view('dashboard.job-details')->with(['ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
+    }
+
+    public function denyFollowUpClaim(Request $request)
+    {
+        try {
+            $dispatchJob = DispatchJob::where('id', $request->jobId)->first();
+            $dispatchJob->status = 'Denied';
+            $result = $dispatchJob->update();
+            return json_encode(['status' => $result]);
+        } catch (\Exception $exception) {
+            return json_encode(['status' => false, 'message' => 'There is error on server side. Please try again!']);
+        }
     }
 
 }

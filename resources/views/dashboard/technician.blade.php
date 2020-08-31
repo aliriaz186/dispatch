@@ -82,10 +82,11 @@
                             <thead>
                             <tr>
                                 <th>#ID</th>
+                                <th>Company Name</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Address</th>
+                                <th>Office Address</th>
                                 <th>Website</th>
                                 <th></th>
                             </tr>
@@ -119,6 +120,7 @@
                 },
                 "columns": [
                     { "data": "id" },
+                    { "data": "company_name" },
                     { "data": "name" },
                     { "data": "email" },
                     { "data": "phone" },

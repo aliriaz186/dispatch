@@ -26,6 +26,11 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-4">
+                                    <label class="">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="companyName" id="companyName" class="form-control"
+                                           placeholder="Enter company name" value="{{$technician->company_name}}">
+                                </div>
+                                <div class="col-lg-4">
                                     <label class="">Full Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control"
                                            placeholder="Enter full name" value="{{$technician->name}}">
@@ -40,6 +45,8 @@
                                                placeholder="Enter email" value="{{$technician->email}}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-lg-4">
                                     <label>Password
                                     </label>
@@ -51,8 +58,6 @@
                                                placeholder="Enter password">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mt-4">
                                 <div class="col-lg-4">
                                     <label>Phone <span class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -73,8 +78,10 @@
                                                placeholder="" value="{{$technician->website}}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-lg-4">
-                                    <label>Address <span class="text-danger">*</span></label>
+                                    <label>Office Address <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
@@ -223,6 +230,7 @@
                 $(".listing_form").validate({
                     // Specify validation rules
                     rules: {
+                        companyName: {required: true},
                         name: {required: true},
                         email: {email: true, required: true},
                         phone: {required: true, minlength: 10},
@@ -232,7 +240,7 @@
                     },
                     // Specify validation error messages
                     messages: {
-                        name: "Please enter name",
+                        companyName: "Please enter company name",
                         email: "Please enter email address",
                         phone: {
                             required: "Please provide a phone number",

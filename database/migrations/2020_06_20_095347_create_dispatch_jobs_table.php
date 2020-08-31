@@ -16,6 +16,16 @@ class CreateDispatchJobsTable extends Migration
         Schema::create('dispatch_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('job_address');
+            $table->string('city');
+            $table->string('estate');
+            $table->string('zip_code');
+            $table->string('policy_no');
+            $table->string('item_type');
+            $table->string('item_location');
+            $table->string('issue_details');
+            $table->string('model_no');
+            $table->string('serial_no');
+            $table->string('prior_issue');
             $table->string('long');
             $table->string('lat');
             $table->integer('id_technician');
@@ -30,6 +40,7 @@ class CreateDispatchJobsTable extends Migration
             $table->string('notes')->nullable();
             $table->timestamps();
         });
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE dispatch_jobs AUTO_INCREMENT = 1000000000;");
     }
 
     /**
