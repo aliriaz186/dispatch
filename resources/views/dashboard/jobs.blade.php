@@ -10,7 +10,7 @@
 								<i class="kt-font-brand fas fa-briefcase"></i>
 							</span>
                             <h3 class="kt-portlet__head-title">
-                                Jobs
+                                Claims
                             </h3>
                         </div>
                         <div class="kt-portlet__head-toolbar">
@@ -63,7 +63,7 @@
                                     <a href="{{env('APP_URL')}}/jobs/new"
                                        class="btn btn-brand btn-elevate btn-icon-sm">
                                         <i class="la la-plus"></i>
-                                        New Job
+                                        New Claim
                                     </a>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                                id="technician-table">
                             <thead>
                             <tr>
-                                <th>#ID</th>
+                                <th>Claim No</th>
                                 <th>Status</th>
                                 <th>Customer</th>
                                 <th>Technician</th>

@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DispatchJob;
+use App\JobRating;
 use App\Jobs\TechnicianInvitationJob;
 use App\Technician;
+use App\TechnicianFiles;
+use App\TechnicianWorkType;
+use App\TechnicianZipCode;
 use http\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use services\email_messages\InvitationMessageBody;
 use services\email_services\EmailAddress;
 use services\email_services\EmailBody;
@@ -29,7 +35,12 @@ class TechnicianController extends Controller
 
     public function getTechnicianDetails(int $id){
         $technician = Technician::where('id', $id)->first();
-        return view('dashboard.technician-details')->with(['technician' => $technician]);
+        $zipCode = TechnicianZipCode::where('technician_id', $id)->get();
+        $workType = TechnicianWorkType::where('technician_id', $id)->get();
+        $technicianFiles = TechnicianFiles::where('technician_id', $id)->get();
+        $openJobsCount = DispatchJob::where(['id_technician' => $id, 'status' => 'offered'])->count();
+        $ratings = JobRating::where('technicianId', $id)->first();
+        return view('dashboard.technician-details')->with(['ratings' => $ratings,'openJobsCount' => $openJobsCount,'technicianFiles' => $technicianFiles,'technician' => $technician,'zipCode' => $zipCode,'workType' => $workType]);
     }
 
     public function newTechnicianView(){
@@ -43,11 +54,13 @@ class TechnicianController extends Controller
 
     public function saveTechnician(Request $request){
         try {
+
             $technician= new Technician();
             if (Technician::where('email', $request->email)->exists()) {
                 return ['status' => false, 'message' => 'Email Already Exists'];
             }
             $technician->phone = $request->phone;
+            $technician->company_name = $request->companyName;
             $technician->name = $request->name;
             $technician->email = $request->email;
             $technician->address = $request->address;
@@ -55,25 +68,64 @@ class TechnicianController extends Controller
             $technician->longg = $request->longg;
             $technician->lat = $request->lat;
             if (!empty($request->password)) {
-                $technician->password = $request->password;
+                $technician->password = md5($request->password);
             } else {
-                $technician->password = "12345";
+                $technician->password = md5('12345');
             }
             $result = $technician->save();
-//            TechnicianInvitationJob::dispatch(new EmailAddress($technician->email), $technician->password);
-            $subject = new SendEmailService(new EmailSubject("You are invited you to join"."   ". env('APP_NAME')));
+            if(!empty($request->zipCodeArray))
+            {
+                $arrayZipCode = explode(',', $request->zipCodeArray);
+                for ($i = 0; $i < count($arrayZipCode); $i++) {
+                    $technicianZipCode = new TechnicianZipCode();
+                    $technicianZipCode->technician_id = $technician->id;
+                    $technicianZipCode->zip_code = $arrayZipCode[$i];
+                    $technicianZipCode->save();
+                }
+            }
+            $arrayWorkType = explode(',', $request->checkBoxesArray);
+            for ($i = 0; $i < count($arrayWorkType); $i++) {
+                $technicianWorkType = new TechnicianWorkType();
+                $technicianWorkType->technician_id = $technician->id;
+                $technicianWorkType->type = $arrayWorkType[$i];
+                $technicianWorkType->save();
+            }
+
+            TechnicianInvitationJob::dispatch(new EmailAddress($technician->email), $technician->password);
+            $subject = new SendEmailService(new EmailSubject("You have been invited you to join ".env('APP_NAME')."'s Team of service Technician"));
             $mailTo = new EmailAddress($technician->email);
-            $this->password = $technician->password;
+            if (!empty($request->password)) {
+                $this->password = $request->password;
+            } else {
+                $this->password = '12345';
+            }
             $invitationMessage = new InvitationMessageBody();
-            $emailBody = $invitationMessage->invitationMessageBody($this->password);
+            $emailBody = $invitationMessage->invitationMessageBody($this->password, $technician->email);
             $body = new EmailBody($emailBody);
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
-            $this->sendMessage($request->phone, "You are invited to use ".env('APP_NAME') ."\nPlease Login to start your business\n" . "Your Password is  : .$this->password.\n" . env('TECHNICIAN_URL'));
-            return json_encode(['status' => $result]);
+//            $this->sendMessage($request->phone, "You are invited to use ".env('APP_NAME') ."\nPlease Login to start your business\n" . "Your Password is  : .$this->password.\n" . env('TECHNICIAN_URL'));
+            return json_encode(['status' => $result, 'technician_id' => $technician->id]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
+        }
+    }
+
+    public function saveFiles(Request $request)
+    {
+        if ($request->hasfile('offer_images')) {
+            $images = "";
+            $files = $request->file('offer_images');
+            foreach ($files as $key => $file) {
+                $key = $key + 1;
+                $name = time() . "-{$key}." . $file->getClientOriginalExtension();
+                $file->move(public_path() . '/technician-files/', $name);
+                $technicianFiles = new TechnicianFiles();
+                $technicianFiles->technician_id = $request->technicianId;
+                $technicianFiles->file = $name;
+                $technicianFiles->save();
+            }
         }
     }
 
@@ -89,6 +141,7 @@ class TechnicianController extends Controller
                 $technician->email = $request->email;
             }
             $technician->phone = $request->phone;
+            $technician->company_name = $request->companyName;
             $technician->name = $request->name;
             $technician->email = $request->email;
             $technician->address = $request->address;
@@ -120,12 +173,13 @@ class TechnicianController extends Controller
     public function getAll(Request $request){
         $columns = array(
             0 =>'id',
-            1 =>'name',
-            2=> 'email',
-            3=> 'phone',
-            4=> 'address',
-            5=> 'website',
-            6=> 'options',
+            1 =>'company_name',
+            2 =>'name',
+            3=> 'email',
+            4=> 'phone',
+            5=> 'address',
+            6=> 'website',
+            7=> 'options',
         );
         $totalData = Technician::count();
         $totalFiltered = $totalData;
@@ -147,6 +201,7 @@ class TechnicianController extends Controller
             {
                 $appUrl = env('APP_URL');
                 $nestedData['id'] = "<a href='$appUrl/technicians/$provider->id/details' style='color: #5d78ff'>$provider->id</a>";
+                $nestedData['company_name'] =  "<a href='$appUrl/technicians/$provider->id/details' style='color: #5d78ff'>$provider->company_name</a>";
                 $nestedData['name'] =  "<a href='$appUrl/technicians/$provider->id/details' style='color: #5d78ff'>$provider->name</a>";
                 $nestedData['email'] = $provider->email;
                 $nestedData['phone'] = $provider->phone;

@@ -24,6 +24,11 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-4">
+                                    <label class="">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="companyName" id="companyName" class="form-control"
+                                           placeholder="Enter company name">
+                                </div>
+                                <div class="col-lg-4">
                                     <label class="">Full Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control"
                                            placeholder="Enter full name">
@@ -38,6 +43,8 @@
                                                placeholder="Enter email">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-lg-4">
                                     <label>Password
                                         <span data-toggle="kt-tooltip" data-placement="top"
@@ -53,8 +60,6 @@
                                                placeholder="Enter password">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mt-4">
                                 <div class="col-lg-4">
                                         <label>Phone <span class="text-danger">*</span></label>
                                         <div class="input-group">
@@ -75,14 +80,63 @@
                                                placeholder="">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-lg-4">
-                                    <label>Address <span class="text-danger">*</span></label>
+                                    <label>Service Area Coverage <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i
+                                                    class="fas fa-map-marker-alt"></i></span></div>
+                                        <input type="text" id="zipCode"
+                                               class="form-control"
+                                               placeholder="Press Enter to Add Multiple Zip Code"
+                                               onkeypress="addMultipleZipCode(event,value)">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Office Address <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
                                         <input type="text" name="address" id="address"
-                                               class="form-control" placeholder="Enter address" onkeypress="codeAddress(event)">
+                                               class="form-control" placeholder="Enter office address" onkeypress="codeAddress(event)">
                                     </div>
+                                </div>
+                                <div class="mt-3 col-lg-12">
+                                    <span class="small my-2" id="append-span"></span>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-12">
+                                    <label>Type of work <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="row col-lg-12 mt-1">
+                                            <input id="plumbing-work" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Plumbing</span>
+                                            <input id="electrician-work" style="margin-left: 129px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Electrician</span>
+                                            <input id="hvac-work" style="margin-left: 139px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Hvac</span>
+                                        </div>
+                                        <div class="row col-lg-12 mt-1">
+                                            <input id="garage-doors-work" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Garage Doors</span>
+                                            <input id="appliances-work" style="margin-left: 100px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Appliances</span>
+                                            <input id="drywall-work" style="margin-left: 133px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Drywall</span>
+                                        </div>
+                                        <div class="row col-lg-12 mt-1">
+                                            <input id="roof-repair-work" style="" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Roof Repair</span>
+                                            <input id="septic-system-work" style="margin-left: 117px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Septic System</span>
+                                            <input id="pools-work" style="margin-left: 114px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Pools</span>
+                                        </div>
+                                        <div class="row col-lg-12 mt-1">
+                                            <input id="central-vacuum-work" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">Central Vacuum</span>
+                                            <input id="other-work" style="margin-left: 85px" type="checkbox"><span style="margin-top: -3px;margin-left: 6px;">other</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-12">
+                                    <label for="offer-images">Select multiple files to upload: </label>
+                                    <input id="offer-images" onclick="selectImages()" type="file" name="images[]"
+                                           multiple/>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +180,119 @@
             <img src="{{asset('img/technician.png')}}" style="display: none" id="technician-icon">
         </form>
 
+        <script type="text/javascript">
+            function selectImages() {
+                if (window.File && window.FileList && window.FileReader) {
+                    var filesInput = document.getElementById("offer-images");
+
+                    filesInput.addEventListener("change", function (event) {
+                        var files = [];
+                        files = event.target.files; //FileList object
+                        var output = document.getElementById("result");
+                            for (var i = 0; i < files.length; i++) {
+                                var file = files[i];
+
+                                //Only pics
+                                if (!file.type.match('image'))
+                                    continue;
+
+                                var picReader = new FileReader();
+
+                                picReader.addEventListener("load", function (event) {
+
+                                    var picFile = event.target;
+
+                                    var div = document.createElement("span");
+
+                                    div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+                                        "title='" + picFile.name + "'/>";
+
+                                    output.insertBefore(div, null);
+
+                                });
+
+                                //Read the image
+                                picReader.readAsDataURL(file);
+                            }
+
+                    });
+                } else {
+                    console.log("Your browser does not support File API");
+                }
+            }</script>
+
+        <script>
+            let zipCodeArray = [];
+
+            function addMultipleZipCode(event, value) {
+                if (event.keyCode === 13) {
+                    if(document.getElementById('zipCode').value === '' || document.getElementById('zipCode').value === null)
+                    {
+                        swal.fire({
+                            "title": "",
+                            "text": "Zip Code may be empty or format may not be correct",
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function (e) {
+                                console.log('on close event fired!');
+                            }
+                        })
+                        event.preventDefault();
+                        return;
+                    }
+                    var zipCodePattern = /^\d{5}$|^\d{5}-\d{4}$/;
+                    if(!zipCodePattern.test(document.getElementById('zipCode').value))
+                    {
+                        swal.fire({
+                            "title": "",
+                            "text": "Zip Code is not correct",
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function (e) {
+                                console.log('on close event fired!');
+                            }
+                        })
+                        event.preventDefault();
+                        return;
+                    }
+                    let appendSpan = document.getElementById('append-span');
+                    let span = document.createElement('span');
+                    span.innerHTML = '<span\n' +
+                        '                                                 style="margin-left:5px;background-color: #f8f8f8;padding: 5px 13px;border: 1px solid #d0d0d0;border-radius: 4px;color: black;">' + value + '\n' +
+                        '                                                         </span>';
+                    appendSpan.appendChild(span);
+                    zipCodeArray.push(value);
+                    document.getElementById('zipCode').value = '';
+                    event.preventDefault();
+                }
+            }
+
+            function addMultipleZipCodeDirect(value) {
+                var zipCodePattern = /^\d{5}$|^\d{5}-\d{4}$/;
+                if (!zipCodePattern.test(document.getElementById('zipCode').value)) {
+                    swal.fire({
+                        "title": "",
+                        "text": "Zip Code is not correct",
+                        "type": "error",
+                        "confirmButtonClass": "btn btn-secondary",
+                        "onClose": function (e) {
+                            console.log('on close event fired!');
+                        }
+                    })
+                    event.preventDefault();
+                    return;
+                }
+                let appendSpan = document.getElementById('append-span');
+                let span = document.createElement('span');
+                span.innerHTML = '<span\n' +
+                    '                                                 style="margin-left:5px;background-color: #f8f8f8;padding: 5px 13px;border: 1px solid #d0d0d0;border-radius: 4px;color: black;">' + value + '\n' +
+                    '                                                         </span>';
+                appendSpan.appendChild(span);
+                zipCodeArray.push(value);
+                document.getElementById('zipCode').value = '';
+                event.preventDefault();
+            }
+        </script>
         <script>
             var marker = false; ////Has the user plotted their location marker?
             var lati = 25.785257;
@@ -256,7 +423,7 @@
 
     <!-- end:: Content -->
     <script>
-
+        let checkBoxesArray = [];
         $(document).ready(function () {
             KTApp.blockPage({
                 baseZ: 2000,
@@ -275,6 +442,7 @@
                 $(".listing_form").validate({
                     // Specify validation rules
                     rules: {
+                        companyName: {required: true},
                         name: {required: true},
                         email: {email: true, required: true},
                         phone: {required: true, minlength: 10},
@@ -284,6 +452,7 @@
                     },
                     // Specify validation error messages
                     messages: {
+                        companyName: "Please enter company name",
                         name: "Please enter name",
                         email: "Please enter email address",
                         phone: {
@@ -301,13 +470,89 @@
                             "type": "error",
                             "confirmButtonClass": "btn btn-secondary",
                             "onClose": function (e) {
-                                console.log('on close event fired!');
+                                checkBoxesArray = [];
                             }
                         })
                     },
                     // Here we submit the completed form to database
                     submitHandler: function (form, e) {
                         // Enable Page Loading
+
+                        if (document.getElementById('other-work').checked === false && document.getElementById('central-vacuum-work').checked === false && document.getElementById('pools-work').checked === false && document.getElementById('septic-system-work').checked === false && document.getElementById('roof-repair-work').checked === false && document.getElementById('drywall-work').checked === false && document.getElementById('appliances-work').checked === false && document.getElementById('garage-doors-work').checked === false && document.getElementById('hvac-work').checked === false && document.getElementById('electrician-work').checked === false && document.getElementById('plumbing-work').checked === false) {
+                            swal.fire({
+                                "title": "",
+                                "text": "Please select atleast one work type",
+                                "type": "error",
+                                "confirmButtonClass": "btn btn-secondary",
+                                "onClose": function (e) {
+                                    console.log('on close event fired!');
+                                }
+                            })
+                            event.preventDefault();
+                            return;
+                        }
+                        if(document.getElementById('zipCode').value !== '')
+                        {
+                            addMultipleZipCodeDirect(document.getElementById('zipCode').value);
+                        }
+                        if (zipCodeArray.length === 0) {
+                            swal.fire({
+                                "title": "",
+                                "text": "Please atleast add one zip code",
+                                "type": "error",
+                                "confirmButtonClass": "btn btn-secondary",
+                                "onClose": function (e) {
+                                    console.log('on close event fired!');
+                                }
+                            })
+                            event.preventDefault();
+                            return;
+                        }
+
+                        if(document.getElementById('plumbing-work').checked === true)
+                        {
+                            checkBoxesArray.push('Plumbing');
+                        }
+                        if(document.getElementById('electrician-work').checked === true)
+                        {
+                            checkBoxesArray.push('Electrician');
+                        }
+                        if(document.getElementById('hvac-work').checked === true)
+                        {
+                            checkBoxesArray.push('Hvac');
+                        }
+                        if(document.getElementById('garage-doors-work').checked === true)
+                        {
+                            checkBoxesArray.push('Garage Doors');
+                        }
+                        if(document.getElementById('appliances-work').checked === true)
+                        {
+                            checkBoxesArray.push('Appliances');
+                        }
+                        if(document.getElementById('drywall-work').checked === true)
+                        {
+                            checkBoxesArray.push('Drywall');
+                        }
+                        if(document.getElementById('roof-repair-work').checked === true)
+                        {
+                            checkBoxesArray.push('Roof Repair');
+                        }
+                        if(document.getElementById('septic-system-work').checked === true)
+                        {
+                            checkBoxesArray.push('Septic System');
+                        }
+                        if(document.getElementById('pools-work').checked === true)
+                        {
+                            checkBoxesArray.push('Pools');
+                        }
+                        if(document.getElementById('central-vacuum-work').checked === true)
+                        {
+                            checkBoxesArray.push('Central Vacuum');
+                        }
+                        if(document.getElementById('other-work').checked === true)
+                        {
+                            checkBoxesArray.push('Other');
+                        }
                         KTApp.blockPage({
                             baseZ: 2000,
                             overlayColor: '#000000',
@@ -318,6 +563,15 @@
                         });
                         var form = $('.listing_form');
                         var data = form.serializeArray();
+
+                        data.push({
+                            "name": "zipCodeArray",
+                            "value": zipCodeArray
+                        });
+                        data.push({
+                            "name": "checkBoxesArray",
+                            "value": checkBoxesArray
+                        });
                         e.preventDefault();
                         e.stopImmediatePropagation();
                         $.ajax({
@@ -328,22 +582,62 @@
                             success: function (result) {
                                 if (result['status']) {
                                     // Disable Page Loading and show confirmation
-                                    setTimeout(function () {
-                                        KTApp.unblockPage();
-                                    }, 1000);
-                                    setTimeout(function () {
-                                        swal.fire({
-                                            "title": "",
-                                            "text": "Saved Successfully",
-                                            "type": "success",
-                                            "showConfirmButton": false,
-                                            "timer": 1500,
-                                            "onClose": function (e) {
-                                                window.location.href = `{{env('APP_URL')}}/technicians`
-                                            }
-                                        })
-                                    }, 2000);
+
+                                    var offerImages = document.getElementById('offer-images').files;
+
+                                    let formData = new FormData();
+                                    for (var i = 0; i < offerImages.length; i++) {
+                                        formData.append("offer_images[]", offerImages[i]);
+                                    }
+                                    formData.append("technicianId", result['technician_id']);
+                                    formData.append("_token", "{{ csrf_token() }}");
+                                    // document.getElementById('send-email-btn').setAttribute('disabled', true);
+                                    $.ajax
+                                    ({
+                                        type: 'POST',
+                                        url: `{{env('APP_URL')}}/technician/files/save`,
+                                        data: formData,
+                                        contentType: false,
+                                        cache: false,
+                                        processData: false,
+                                        success: function (data) {
+                                            setTimeout(function () {
+                                                KTApp.unblockPage();
+                                            }, 1000);
+                                            setTimeout(function () {
+                                                swal.fire({
+                                                    "title": "",
+                                                    "text": "Saved Successfully",
+                                                    "type": "success",
+                                                    "showConfirmButton": false,
+                                                    "timer": 1500,
+                                                    "onClose": function (e) {
+                                                        window.location.href = `{{env('APP_URL')}}/technicians`
+                                                    }
+                                                })
+                                            }, 2000);
+                                        },
+                                        error: function (data) {
+                                            checkBoxesArray = [];
+                                            setTimeout(function () {
+                                                KTApp.unblockPage();
+                                            }, 1000);
+                                            setTimeout(function () {
+                                                swal.fire({
+                                                    "title": "",
+                                                    "text": result['message'],
+                                                    "type": "error",
+                                                    "confirmButtonClass": "btn btn-secondary",
+                                                    "onClose": function (e) {
+                                                        console.log('on close event fired!');
+                                                    }
+                                                })
+                                            }, 2000);
+                                        }
+                                    });
+
                                 } else {
+                                    checkBoxesArray = [];
                                     setTimeout(function () {
                                         KTApp.unblockPage();
                                     }, 1000);

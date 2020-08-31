@@ -4,11 +4,12 @@ namespace services\email_messages;
 
 class InvitationMessageBody
 {
-    public function invitationMessageBody(string $password)
+    public function invitationMessageBody(string $password, string $username)
     {
         $emailBody = '
    <body>
-             <div style="margin-left: 50px;font-size: 25px;padding-top: 40px">Please Login to start your business</div><br>
+             <div style="margin-left: 50px;font-size: 25px;padding-top: 40px">Please click on Login button to start receiving business from '.env('APP_NAME').'</div><br>
+            <div style="padding-left: 50px;font-size: 18px;padding-right: 50px">Your Username is  : '.$username.'</div><br>
             <div style="padding-left: 50px;font-size: 18px;padding-right: 50px">Your Password is  : '.$password.'</div>
  <div style="padding-top: 30px;padding-bottom: 40px">
  <a href="'. env('TECHNICIAN_URL'). '" style=" background-color: #1AAA55;

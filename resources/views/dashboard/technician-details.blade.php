@@ -15,7 +15,7 @@
                         <a style="float: right" href="{{env('APP_URL')}}/technicians/{{$technician->id}}/jobs/new"
                              class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
-                            Add Job
+                            Add Claim
                         </a>
                     </div>
                 </div>
@@ -80,7 +80,18 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> Comming Soon </p>
+                                    <div class="d-flex flex-wrap">
+                                        @if(count($technicianFiles) != 0)
+                                        @foreach($technicianFiles as $file)
+                                            <div style="margin-left: 10px">
+                                                <img style="object-fit: cover;border: 1px solid #a9a9a973;width: 200px;height: 200px;"
+                                                     src="{{asset('technician-files')}}/{{$file->file}}">
+                                            </div>
+                                        @endforeach
+                                        @else
+                                            <p>No Files Attached</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="kt-portlet kt-portlet--mobile">
+                    <div class="kt-portlet kt-portlet--mobile" style="display: none">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
@@ -115,7 +126,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="kt-portlet kt-portlet--mobile">
+                    <div class="kt-portlet kt-portlet--mobile" style="display: none">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
@@ -135,14 +146,14 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Jobs
+                                    Open Claims
                                 </h3>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> Comming Soon </p>
+                                    <p> Total Open Claims : <span style="font-weight: 500;">{{$openJobsCount}}</span> </p>
                                 </div>
                             </div>
                         </div>
@@ -157,8 +168,65 @@
                         </div>
                         <div class="kt-portlet__body">
                             <div class="row">
+                                @if(!empty($ratings->rating))
+                                    <div class="col-lg-12">
+                                        <p><span
+                                                style="font-weight: 500">Rating:</span> {{$ratings->rating}} out of 5
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p><span
+                                                style="font-weight: 500">Additional Comments:</span> {{$ratings->additional_comments}}
+                                        </p>
+                                    </div>
+                                @else
+                                    <div class="col-lg-12">
+                                        <p>No reviews yet!</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Service Area Coverage
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
                                 <div class="col-lg-12">
-                                    <p> Comming Soon </p>
+                                    @if(count($zipCode) != 0)
+                                    @foreach($zipCode as $zip)
+                                    <p> {{$zip->zip_code}} </p>
+                                    @endforeach
+                                    @else
+                                        <p>No zip code added</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Selected Work Types
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @if(count($workType) != 0)
+                                    @foreach($workType as $types)
+                                        <p> {{$types->type}} </p>
+                                    @endforeach
+                                    @else
+                                        <p>No work type selected</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

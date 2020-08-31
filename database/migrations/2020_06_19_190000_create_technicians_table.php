@@ -15,6 +15,7 @@ class CreateTechniciansTable extends Migration
     {
         Schema::create('technicians', function (Blueprint $table) {
             $table->id();
+            $table->string('company_name');
             $table->string('name');
             $table->string('email');
             $table->string('phone');
@@ -25,6 +26,7 @@ class CreateTechniciansTable extends Migration
             $table->string('password')->nullable();
             $table->timestamps();
         });
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE technicians AUTO_INCREMENT = 1000000000;");
     }
 
     /**

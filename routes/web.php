@@ -41,4 +41,13 @@ Route::post('customer/update', 'CustomerController@update');
 Route::get('jobs/{id}/details', 'JobsController@getJobDetails');
 Route::get('technicians/{id}/details', 'TechnicianController@getTechnicianDetails');
 Route::get('technicians/{id}/jobs/new', 'TechnicianController@addNewJob');
+Route::post('forgot-password-request', 'AuthController@forgotPasswordRequest');
+Route::get('set-password/{email}/get', 'AuthController@setPasswordPage');
+Route::post('forgot-password-change', 'AuthController@changePassword');
+Route::post('technician/files/save', 'TechnicianController@saveFiles');
+Route::get('new-job', 'JobsController@newJobView');
+Route::post('job/images/save', 'JobsController@saveImages');
+Route::post('followup/claim/denied', 'JobsController@denyFollowUpClaim');
+
+
 

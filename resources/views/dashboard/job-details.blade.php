@@ -8,6 +8,7 @@
         <!--Begin::Row-->
         <form action="#" method="POST" id="listing_form" class="form-horizontal listing_form">
             {{ csrf_field() }}
+            <input type="hidden" id="jobId" value="{{$job->id}}">
             <div class="row">
 
                 <div class="col-xl-6 order-lg-6 order-xl-6">
@@ -23,21 +24,164 @@
                             </div>
                         </div>
                     </div>
+                    @if(\App\DispatchJob::where('id', $job->id)->first()['status'] == 'Follow Up')
                     <div class="kt-portlet kt-portlet--mobile">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                   Job Description
+                                   Claim Follow Up
                                 </h3>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> {{$job->description}} </p>
+                                    <p><span style="font-weight: 500">Reason:</span> {{$followUp->reason}} </p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <p> {{$job->service_type}} </p>
+                                    <button class="btn btn-primary" type="button" style="background-color: #0780b7!important;border-color: #0780b7!important;color: white!important;" onclick="followUpClaimDenied()">Deny Claim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if(\App\DispatchJob::where('id', $job->id)->first()['status'] == 'Completed')
+                        <div class="kt-portlet kt-portlet--mobile">
+                            <div class="kt-portlet__head kt-portlet__head--lg">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title text-uppercase">
+                                        Claim Completion Status
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p><span style="font-weight: 500">Issue Repaired:</span> {{$jobCompletionStatus->completion_status}} </p>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p><span style="font-weight: 500">Conclusion:</span> {{$jobCompletionStatus->conclusion}} </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-portlet kt-portlet--mobile">
+                            <div class="kt-portlet__head kt-portlet__head--lg">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title text-uppercase">
+                                        Reviews
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="row">
+                                    @if(!empty($ratings->rating))
+                                    <div class="col-lg-12">
+                                        <p><span
+                                                style="font-weight: 500">Rating:</span> {{$ratings->rating}} out of 5
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p><span
+                                                style="font-weight: 500">Additional Comments:</span> {{$ratings->additional_comments}}
+                                        </p>
+                                    </div>
+                                    @else
+                                        <div class="col-lg-12">
+                                            <p>No reviews yet!</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Claim Status
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p> {{$job->status}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Claim Description
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Description:</span> {{$job->description}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Service Type:</span> {{$job->service_type}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Claim Address
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">City:</span> {{$job->city}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Estate:</span> {{$job->estate}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Zip Code:</span> {{$job->zip_code}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Claims Details
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Policy No:</span> {{$job->policy_no}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Item Type:</span> {{$job->item_type}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Item Location:</span> {{$job->item_location}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Issue Details:</span> {{$job->issue_details}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Model No:</span> {{$job->model_no}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Serial No:</span> {{$job->serial_no}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Prior Issue:</span> {{$job->prior_issue}} </p>
                                 </div>
                             </div>
                         </div>
@@ -53,9 +197,9 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> {{$customer->name}} </p>
-                                    <p> {{$customer->email}} </p>
-                                    <p> {{$customer->phone}} </p>
+                                    <p><span style="font-weight: 500">Name:</span> {{$customer->name}} </p>
+                                    <p><span style="font-weight: 500">Email:</span> {{$customer->email}} </p>
+                                    <p><span style="font-weight: 500">Phone No:</span> {{$customer->phone}} </p>
                                 </div>
                             </div>
                         </div>
@@ -71,9 +215,40 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> {{$job->customer_availability_one}} </p>
-                                    <p> {{$job->customer_availability_two}} </p>
-                                    <p> {{$job->customer_availability_three}} </p>
+                                    <p><span style="font-weight: 500">First:</span> {{$job->customer_availability_one}} </p>
+                                    <p><span style="font-weight: 500">Second:</span> {{$job->customer_availability_two}} </p>
+                                    <p><span style="font-weight: 500">Third:</span> {{$job->customer_availability_three}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Providers
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Name:</span> {{$technician->name}} </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Email:</span> {{$technician->email}} </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Phone:</span> {{$technician->phone}} </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Address:</span> {{$technician->address}} </p>
                                 </div>
                             </div>
                         </div>
@@ -98,37 +273,6 @@
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Providers
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->name}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->email}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->phone}} </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$technician->address}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
                                     Attachments
                                 </h3>
                             </div>
@@ -136,7 +280,18 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p> Comming Soon </p>
+                                    <div class="d-flex flex-wrap">
+                                        @if(count($jobImages) != 0)
+                                            @foreach($jobImages as $images)
+                                                <div style="margin-left: 10px">
+                                                    <img style="object-fit: cover;border: 1px solid #a9a9a973;width: 200px;height: 200px;"
+                                                         src="{{asset('job-files')}}/{{$images->image}}">
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <p>No Images Attached</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +305,7 @@
                                 <i class="kt-font-brand fas fa-briefcase"></i>
                             </span>
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Job Location ({{$job->job_address}})
+                                    Claim Location ({{$job->job_address}})
                                 </h3>
                             </div>
                         </div>
@@ -162,27 +317,11 @@
                                 <div id="map" style="height:541px!important;width:100%;"></div>
                         </div>
                     </div>
-                    <div class="kt-portlet kt-portlet--mobile">
+                    <div class="kt-portlet kt-portlet--mobile" style="display: none">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
                                 <h3 class="kt-portlet__head-title text-uppercase">
-                                    Job Status
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$job->status}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Activity of Job
+                                    Activity of Claim
                                 </h3>
                             </div>
                         </div>
@@ -200,6 +339,69 @@
         </form>
         <p id="long" style="display: none">{{$job->long}}</p>
         <p id="lat" style="display: none">{{$job->lat}}</p>
+        <script>
+            function followUpClaimDenied()
+            {
+                alert('hi')
+                // e.preventDefault();
+                let data = new FormData();
+                let jobId = document.getElementById('jobId').value;
+                data.append("_token", "{{ csrf_token() }}");
+                data.append("jobId", jobId);
+                KTApp.blockPage({
+                    baseZ: 2000,
+                    overlayColor: '#000000',
+                    type: 'v1',
+                    state: 'danger',
+                    opacity: 0.15,
+                    message: 'Processing...'
+                });
+                $.ajax({
+                    url: "{{env('APP_URL')}}/followup/claim/denied",
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result['status']) {
+                            // Disable Page Loading and show confirmation
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": "Claim denied Successfully",
+                                    "type": "success",
+                                    "showConfirmButton": false,
+                                    "timer": 1500,
+                                    "onClose": function (e) {
+                                        window.location.reload();
+                                    }
+                                })
+                            }, 2000);
+                        } else {
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": result['message'],
+                                    "type": "error",
+                                    "confirmButtonClass": "btn btn-secondary",
+                                    "onClose": function (e) {
+                                        console.log('on close event fired!');
+                                    }
+                                })
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        </script>
         <script>
             let marker = false; ////Has the user plotted their location marker?
             let lati = parseFloat(document.getElementById('lat').innerText);
@@ -339,4 +541,5 @@
         });
 
     </script>
+
 @endsection
