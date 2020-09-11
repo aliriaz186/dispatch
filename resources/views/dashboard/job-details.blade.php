@@ -39,7 +39,14 @@
                                     <p><span style="font-weight: 500">Reason:</span> {{$followUp->reason}} </p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <button class="btn btn-primary" type="button" style="background-color: #0780b7!important;border-color: #0780b7!important;color: white!important;" onclick="followUpClaimDenied()">Deny Claim</button>
+                                    <button class="btn btn-primary" type="button"
+                                            style="background-color: #f48134!important;border-color: #f48134!important;color: white!important;"
+                                            onclick="followUpClaimApprove()">Approve Claim
+                                    </button>
+                                    <button class="btn btn-primary" type="button"
+                                            style="background-color: #0780b7!important;border-color: #0780b7!important;color: white!important;"
+                                            onclick="followUpClaimDenied()">Deny Claim
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -76,16 +83,19 @@
                             <div class="kt-portlet__body">
                                 <div class="row">
                                     @if(!empty($ratings->rating))
-                                    <div class="col-lg-12">
-                                        <p><span
-                                                style="font-weight: 500">Rating:</span> {{$ratings->rating}} out of 5
-                                        </p>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <p><span
-                                                style="font-weight: 500">Additional Comments:</span> {{$ratings->additional_comments}}
-                                        </p>
-                                    </div>
+                                        @foreach($ratings as $item)
+                                            <div class="col-lg-12">
+                                                <p><span
+                                                        style="font-weight: 500">Rating:</span> {{$item->rating}} out of
+                                                    5
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <p><span
+                                                        style="font-weight: 500">Additional Comments:</span> {{$item->additional_comments}}
+                                                </p>
+                                            </div>
+                                        @endforeach
                                     @else
                                         <div class="col-lg-12">
                                             <p>No reviews yet!</p>
@@ -107,6 +117,30 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <p> {{$job->status}} </p>
+                                </div>
+                                <div class="col-lg-12" id="text-div">
+                                    <p style="text-decoration: underline;color: dodgerblue;cursor: pointer" onclick="showSelectField()"> Change Status </p>
+                                </div>
+                                <div id="statusChangeDiv" style="display: none">
+                                <div class="col-lg-12">
+                                    <select name="jobStatus" id="jobStatus"
+                                            class="form-control" value="{{$job->status ?? ''}}">
+                                        <option selected="selected" value="">Select Status</option>
+                                        <option  {{$job->status == "offered" ? 'selected' : ''}} value="offered">Offered</option>
+                                        <option  {{$job->status == "unscheduled" ? 'selected' : ''}} value="unscheduled">Unscheduled</option>
+                                        <option  {{$job->status == "scheduled" ? 'selected' : ''}} value="scheduled">Scheduled</option>
+                                        <option  {{$job->status == "On My Way" ? 'selected' : ''}} value="On My Way">On My Way</option>
+                                        <option  {{$job->status == "Job Started" ? 'selected' : ''}} value="Job Started">Job Started</option>
+                                        <option  {{$job->status == "Completed" ? 'selected' : ''}} value="Completed">Completed</option>
+                                        <option  {{$job->status == "Follow Up" ? 'selected' : ''}} value="Follow Up">Follow Up</option>
+                                        <option  {{$job->status == "Denied" ? 'selected' : ''}} value="Denied">Denied</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-12 mt-2">
+                                    <button class="btn btn-primary" type="button"
+                                            style="background-color: #f48134!important;border-color: #f48134!important;color: white!important;" onclick="changeStatus()">Change
+                                    </button>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +182,22 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <p><span style="font-weight: 500">Zip Code:</span> {{$job->zip_code}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Claim Location
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p> {{$job->job_address}} </p>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +267,7 @@
                                 <div class="col-lg-12">
                                     <p><span style="font-weight: 500">First:</span> {{$job->customer_availability_one}} </p>
                                     <p><span style="font-weight: 500">Second:</span> {{$job->customer_availability_two}} </p>
-                                    <p><span style="font-weight: 500">Third:</span> {{$job->customer_availability_three}} </p>
+{{--                                    <p><span style="font-weight: 500">Third:</span> {{$job->customer_availability_three}} </p>--}}
                                 </div>
                             </div>
                         </div>
@@ -340,9 +390,140 @@
         <p id="long" style="display: none">{{$job->long}}</p>
         <p id="lat" style="display: none">{{$job->lat}}</p>
         <script>
+            function showSelectField()
+            {
+                document.getElementById('statusChangeDiv').style.display = 'Block';
+                document.getElementById('text-div').style.display = 'none';
+            }
+            function changeStatus()
+            {
+                let data = new FormData();
+                let jobId = document.getElementById('jobId').value;
+                let jobStatus = document.getElementById('jobStatus').value;
+                data.append("_token", "{{ csrf_token() }}");
+                data.append("jobStatus", jobStatus);
+                data.append("jobId", jobId);
+                KTApp.blockPage({
+                    baseZ: 2000,
+                    overlayColor: '#000000',
+                    type: 'v1',
+                    state: 'danger',
+                    opacity: 0.15,
+                    message: 'Processing...'
+                });
+                $.ajax({
+                    url: "{{env('APP_URL')}}/claim/status/change",
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result['status']) {
+                            // Disable Page Loading and show confirmation
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": "Claim Status Changed Successfully!",
+                                    "type": "success",
+                                    "showConfirmButton": false,
+                                    "timer": 1500,
+                                    "onClose": function (e) {
+                                        window.location.reload();
+                                    }
+                                })
+                            }, 2000);
+                        } else {
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": result['message'],
+                                    "type": "error",
+                                    "confirmButtonClass": "btn btn-secondary",
+                                    "onClose": function (e) {
+                                        console.log('on close event fired!');
+                                    }
+                                })
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        </script>
+        <script>
+            function followUpClaimApprove()
+            {
+                // alert('hi')
+                // e.preventDefault();
+                let data = new FormData();
+                let jobId = document.getElementById('jobId').value;
+                data.append("_token", "{{ csrf_token() }}");
+                data.append("jobId", jobId);
+                KTApp.blockPage({
+                    baseZ: 2000,
+                    overlayColor: '#000000',
+                    type: 'v1',
+                    state: 'danger',
+                    opacity: 0.15,
+                    message: 'Processing...'
+                });
+                $.ajax({
+                    url: "{{env('APP_URL')}}/followup/claim/approve",
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result['status']) {
+                            // Disable Page Loading and show confirmation
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": "Claim Approved Successfully!",
+                                    "type": "success",
+                                    "showConfirmButton": false,
+                                    "timer": 1500,
+                                    "onClose": function (e) {
+                                        window.location.reload();
+                                    }
+                                })
+                            }, 2000);
+                        } else {
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": result['message'],
+                                    "type": "error",
+                                    "confirmButtonClass": "btn btn-secondary",
+                                    "onClose": function (e) {
+                                        console.log('on close event fired!');
+                                    }
+                                })
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        </script>
+        <script>
             function followUpClaimDenied()
             {
-                alert('hi')
+                // alert('hi')
                 // e.preventDefault();
                 let data = new FormData();
                 let jobId = document.getElementById('jobId').value;

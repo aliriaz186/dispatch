@@ -120,13 +120,17 @@
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/customers" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-user-tie"></i></span><span
                                     class="kt-menu__link-text">Customers</span></a></li>
+                        <li class="kt-menu__item {{ (Request::segment(1) == 'cap') ? 'kt-menu__item--active' : '' }}"
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}/cap" class="kt-menu__link "><span
+                                    class="kt-menu__link-icon"><i class="fas fa-hand-holding-usd"></i></span><span
+                                    class="kt-menu__link-text">Cap</span></a></li>
                         <li class="kt-menu__item {{ (Request::segment(1) == 'reviews') ? 'kt-menu__item--active' : '' }}"
-                            aria-haspopup="true"><a href="{{env('APP_URL')}}reviews" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="fas flaticon-feed"></i></span><span
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}/reviews" class="kt-menu__link "><span
+                                    class="kt-menu__link-icon"><i class="fas fa-star-half-alt"></i></span><span
                                     class="kt-menu__link-text">Reviews</span></a></li>
-                        <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span
-                                    class="kt-menu__link-icon"><i class="far fa-chart-bar"></i></span><span
-                                    class="kt-menu__link-text">Reports</span></a></li>
+{{--                        <li class="kt-menu__item " aria-haspopup="true"><a href="" class="kt-menu__link "><span--}}
+{{--                                    class="kt-menu__link-icon"><i class="far fa-chart-bar"></i></span><span--}}
+{{--                                    class="kt-menu__link-text">Reports</span></a></li>--}}
                     </ul>
                 </div>
             </div>

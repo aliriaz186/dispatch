@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cap;
 use App\Customer;
 use Illuminate\Http\Request;
 
@@ -35,8 +36,9 @@ class CustomerController extends Controller
         $data = array();
         if (!empty($customers)) {
             foreach ($customers as $customer) {
-                $nestedData['id'] = $customer->id;
-                $nestedData['name'] = $customer->name;
+                $appUrl = env('APP_URL');
+                $nestedData['id'] = "<a href='$appUrl/customer/$customer->id/details' style='color: #5d78ff'>$customer->id</a>";
+                $nestedData['name'] = "<a href='$appUrl/customer/$customer->id/details' style='color: #5d78ff'>$customer->name</a>";;
                 $nestedData['email'] = $customer->email;
                 $nestedData['phone'] = $customer->phone;
                 $nestedData['options'] = '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md"
@@ -85,5 +87,11 @@ class CustomerController extends Controller
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
         }
+    }
+
+    function getCustomerDetails($customerId)
+    {
+        $cap = Cap::all();
+        return view('dashboard.customer-details')->with(['cap' => $cap,'customerId' => $customerId]);
     }
 }

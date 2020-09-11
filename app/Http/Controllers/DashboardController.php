@@ -23,6 +23,9 @@ class DashboardController extends Controller
         $year = date('yy');
         $totalThisYearCompletedClaims = DispatchJob::whereYear('created_at' , $year)->where('status', 'Completed')->count();
         $deniedClaimsCount = DispatchJob::where('status', 'denied')->count();
-        return view('dashboard/dashboard')->with(['deniedClaimsCount' => $deniedClaimsCount,'totalThisWeekCompletedClaims' => $totalThisWeekCompletedClaims,'totalThisYearCompletedClaims' => $totalThisYearCompletedClaims,'totalThisMonthCompletedClaims' => $totalThisMonthCompletedClaims,'totalTodayCompletedClaims' => $totalTodayCompletedClaims,'totalOpenClaimsCount' => $totalOpenClaimsCount,'customersCount' => $customersCount,'technicianCount' => $technicianCount,'jobsCount' => $jobsCount]);
+        $closedJobsCount = DispatchJob::where('status' , 'Completed')->count();
+        $followUpCount = DispatchJob::where('status' , 'Follow Up')->count();
+
+        return view('dashboard/dashboard')->with(['followUpCount' => $followUpCount,'closedJobsCount' => $closedJobsCount,'deniedClaimsCount' => $deniedClaimsCount,'totalThisWeekCompletedClaims' => $totalThisWeekCompletedClaims,'totalThisYearCompletedClaims' => $totalThisYearCompletedClaims,'totalThisMonthCompletedClaims' => $totalThisMonthCompletedClaims,'totalTodayCompletedClaims' => $totalTodayCompletedClaims,'totalOpenClaimsCount' => $totalOpenClaimsCount,'customersCount' => $customersCount,'technicianCount' => $technicianCount,'jobsCount' => $jobsCount]);
     }
 }

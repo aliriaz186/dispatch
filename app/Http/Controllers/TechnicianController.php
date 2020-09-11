@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cap;
 use App\DispatchJob;
 use App\JobRating;
 use App\Jobs\TechnicianInvitationJob;
@@ -39,7 +40,7 @@ class TechnicianController extends Controller
         $workType = TechnicianWorkType::where('technician_id', $id)->get();
         $technicianFiles = TechnicianFiles::where('technician_id', $id)->get();
         $openJobsCount = DispatchJob::where(['id_technician' => $id, 'status' => 'offered'])->count();
-        $ratings = JobRating::where('technicianId', $id)->first();
+        $ratings = JobRating::where('technicianId', $id)->get();
         return view('dashboard.technician-details')->with(['ratings' => $ratings,'openJobsCount' => $openJobsCount,'technicianFiles' => $technicianFiles,'technician' => $technician,'zipCode' => $zipCode,'workType' => $workType]);
     }
 
@@ -49,7 +50,8 @@ class TechnicianController extends Controller
 
     public function addNewJob(int $id){
         $technician = Technician::where('id', $id)->first();
-        return view('dashboard.technician-new-job')->with(['technician' => $technician]);
+        $cap = Cap::all();
+        return view('dashboard.technician-new-job')->with(['caps' => $cap,'technician' => $technician]);
     }
 
     public function saveTechnician(Request $request){
@@ -170,6 +172,19 @@ class TechnicianController extends Controller
         return view('dashboard.edit-technician')->with(['technician' => $technician]);
     }
 
+    public function deleteTechnician(int $id)
+    {
+        try {
+            Technician::where('id', $id)->delete();
+            TechnicianFiles::where('technician_id', $id)->delete();
+            TechnicianWorkType::where('technician_id', $id)->delete();
+            TechnicianZipCode::where('technician_id', $id)->delete();
+            return view('dashboard.technician')->with('status', true);
+        } catch (\Exception $exception) {
+            return view('dashboard.technician')->with('status', $exception->getMessage());
+        }
+    }
+
     public function getAll(Request $request){
         $columns = array(
             0 =>'id',
@@ -218,6 +233,13 @@ class TechnicianController extends Controller
                                                        class="kt-nav__link">
                                                         <i class="kt-nav__link-icon flaticon2-settings"></i>
                                                         <span class="kt-nav__link-text">Manage</span>
+                                                    </a>
+                                                </li>
+                                                <li class="kt-nav__item">
+                                                    <a href="'.env('APP_URL').'/technicians/delete/'.$provider->id.'"
+                                                       class="kt-nav__link">
+                                                        <i class="kt-nav__link-icon fas fa-trash"></i>
+                                                        <span class="kt-nav__link-text">Delete</span>
                                                     </a>
                                                 </li>
                                             </ul>

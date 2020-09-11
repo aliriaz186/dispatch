@@ -98,8 +98,8 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
-                                        <input type="text" name="address" id="address"
-                                               class="form-control" placeholder="Enter office address" onkeypress="codeAddress(event)">
+                                        <input type="text" name="address" id="address" readonly
+                                               class="form-control" placeholder="Please Select From Map" onkeypress="codeAddress(event)">
                                     </div>
                                 </div>
                                 <div class="mt-3 col-lg-12">
