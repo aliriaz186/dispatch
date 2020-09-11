@@ -87,5 +87,29 @@
              </div>
          </div>
      </div>
+     <div class="col-xl-3 col-lg-3 order-lg-3 order-xl-2 ml-3">
+         <div class="kt-portlet kt-portlet--height-fluid">
+             <div class="kt-widget14">
+                 <div class="kt-widget14__header kt-margin-b-30">
+                     <h3 class="text-center">
+                         Total Closed Claims
+                     </h3>
+                 </div>
+                 <h3 class="text-center">{{$closedJobsCount}}+</h3>
+             </div>
+         </div>
+     </div>
+     <div class="col-xl-3 col-lg-3 order-lg-3 order-xl-2 ml-3">
+         <div class="kt-portlet kt-portlet--height-fluid">
+             <div class="kt-widget14">
+                 <div class="kt-widget14__header kt-margin-b-30">
+                     <h3 class="text-center">
+                         Need Follow Up
+                     </h3>
+                 </div>
+                 <h3 class="text-center">{{$followUpCount}}+</h3>
+             </div>
+         </div>
+     </div>
  </div>
 @endsection

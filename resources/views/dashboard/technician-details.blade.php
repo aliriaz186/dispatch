@@ -169,16 +169,18 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 @if(!empty($ratings->rating))
+                                    @foreach($ratings as $item)
                                     <div class="col-lg-12">
                                         <p><span
-                                                style="font-weight: 500">Rating:</span> {{$ratings->rating}} out of 5
+                                                style="font-weight: 500">Rating:</span> {{$item->rating}} out of 5
                                         </p>
                                     </div>
                                     <div class="col-lg-12">
                                         <p><span
-                                                style="font-weight: 500">Additional Comments:</span> {{$ratings->additional_comments}}
+                                                style="font-weight: 500">Additional Comments:</span> {{$item->additional_comments}}
                                         </p>
                                     </div>
+                                    @endforeach
                                 @else
                                     <div class="col-lg-12">
                                         <p>No reviews yet!</p>

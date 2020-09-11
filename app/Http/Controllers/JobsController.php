@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cap;
 use App\ClaimFollowUp;
 use App\Customer;
 use App\DispatchJob;
@@ -29,7 +30,8 @@ class JobsController extends Controller
     }
 
     public function newJobView(){
-        return view('dashboard.new-job');
+        $cap = Cap::all();
+        return view('dashboard.new-job')->with(['caps' => $cap]);
     }
 
     public function saveJob(Request $request){
@@ -163,7 +165,7 @@ class JobsController extends Controller
         $jobImages = JobImages::where('job_id', $jobId)->get();
         $followUp = ClaimFollowUp::where('job_id', $jobId)->first();
         $jobCompletionStatus = JobCompletionStatus::where('job_id', $jobId)->first();
-        $ratings = JobRating::where('jobId', $jobId)->first();
+        $ratings = JobRating::where('jobId', $jobId)->get();
         return view('dashboard.job-details')->with(['ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
     }
 
@@ -172,6 +174,30 @@ class JobsController extends Controller
         try {
             $dispatchJob = DispatchJob::where('id', $request->jobId)->first();
             $dispatchJob->status = 'Denied';
+            $result = $dispatchJob->update();
+            return json_encode(['status' => $result]);
+        } catch (\Exception $exception) {
+            return json_encode(['status' => false, 'message' => 'There is error on server side. Please try again!']);
+        }
+    }
+
+    public function approveFollowUpClaim(Request $request)
+    {
+        try {
+            $dispatchJob = DispatchJob::where('id', $request->jobId)->first();
+            $dispatchJob->status = 'scheduled';
+            $result = $dispatchJob->update();
+            return json_encode(['status' => $result]);
+        } catch (\Exception $exception) {
+            return json_encode(['status' => false, 'message' => 'There is error on server side. Please try again!']);
+        }
+    }
+
+    public function changeStatusClaim(Request $request)
+    {
+        try {
+            $dispatchJob = DispatchJob::where('id', $request->jobId)->first();
+            $dispatchJob->status = $request->jobStatus;
             $result = $dispatchJob->update();
             return json_encode(['status' => $result]);
         } catch (\Exception $exception) {

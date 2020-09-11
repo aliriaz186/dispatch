@@ -27,21 +27,10 @@
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fas fa-map-marker-alt"></i></span></div>
-                                    <input type="text" name="address" id="address"
-                                           class="form-control" placeholder="Enter address" onchange="addressEntered(this.value)">
+                                    <input type="text" name="address" id="address" readonly
+                                           class="form-control" placeholder="Please Select From Map" onchange="addressEntered(this.value)">
 {{--                                    <input type="text" name="technician_id" id="technician_id"--}}
 {{--                                           class="form-control" style="display: none">--}}
-                                </div>
-                            </div>
-                            <div class="col-lg-12" style="margin-top: 20px !important;">
-                                <label>Technician <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fas fa-user"></i></span></div>
-                                    <input type="text" name="technician_name" id="technician_name"
-                                           class="form-control" placeholder="Select nearby provider from map" readonly>
-                                    <input type="text" name="technician_id" id="technician_id"
-                                           class="form-control" style="display: none">
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -65,10 +54,21 @@
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label>Zip Code <span class="text-danger">*</span></label>
                                 <div class="input-group">
-{{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
-{{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
+                                    {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+                                    {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
                                     <input type="text" name="zipCode" id="zipCode"
                                            class="form-control" placeholder="Enter zip code">
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 20px !important;">
+                                <label>Technician <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                                class="fas fa-user"></i></span></div>
+                                    <input type="text" name="technician_name" id="technician_name"
+                                           class="form-control" placeholder="Select nearby provider from map" readonly>
+                                    <input type="text" name="technician_id" id="technician_id"
+                                           class="form-control" style="display: none">
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -146,7 +146,12 @@
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label class="">Claim Service Type <span class="text-danger">*</span></label>
                                 <input type="text" name="service_type" id="service_type" class="form-control"
-                                       placeholder="Enter job service type">
+                                       placeholder="Enter job service type" list="browsers">
+                                <datalist id="browsers">
+                                    @foreach($caps as $item)
+                                        <option value="{{$item->name ?? ''}}">
+                                    @endforeach
+                                </datalist>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label class="">Customer Name <span class="text-danger">*</span></label>
@@ -179,7 +184,7 @@
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fa fa-calendar-times"></i></span></div>
                                     <input type="datetime-local" name="customer_availability_one" id="customer_availability_one"
-                                           class="form-control"
+                                           class="form-control datepicker"
                                            placeholder="">
                                 </div>
                             </div>
@@ -193,16 +198,16 @@
                                            placeholder="">
                                 </div>
                             </div>
-                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Third Best Availability</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fa fa-calendar-times"></i></span></div>
-                                    <input type="datetime-local" name="customer_availability_three" id="customer_availability_three"
-                                           class="form-control"
-                                           placeholder="">
-                                </div>
-                            </div>
+{{--                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">--}}
+{{--                                <label>Third Best Availability</label>--}}
+{{--                                <div class="input-group">--}}
+{{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
+{{--                                                class="fa fa-calendar-times"></i></span></div>--}}
+{{--                                    <input type="datetime-local" name="customer_availability_three" id="customer_availability_three"--}}
+{{--                                           class="form-control"--}}
+{{--                                           placeholder="">--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label>Notes</label>
                                 <div class="input-group">
@@ -226,7 +231,7 @@
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-8">
                                         <button type="submit" class="btn btn-primary">Create Claim</button>
                                         |
                                         <a href="{{env('APP_URL')}}/jobs" class="btn btn-warning">Go Back</a>
@@ -442,6 +447,35 @@
                 </script>
     </div>
     <script>
+        // window.onload = (event) => {
+        //     $(document).ready(function () {
+        //         const today = new Date()
+        //         const tomorrow = new Date(today)
+        //         tomorrow.setDate(tomorrow.getDate() + 1)
+        //         $('#customer_availability_one').datepicker('setStartDate', new Date());
+        //         $('#customer_availability_one').datepicker('setEndDate', tomorrow);
+        //     });
+        // };
+        $(document).ready(function(){
+            var maxDate = new Date(Date.now() + 62 * 60 * 60 * 1000).toISOString();
+            elem = document.getElementById("customer_availability_one")
+            var iso = new Date().toISOString();
+            var minDate = iso.substring(0,iso.length-1);
+            elem.min = minDate
+            elem.max = maxDate
+            console.log('min',minDate);
+            console.log('max',maxDate);
+        });
+        $(document).ready(function(){
+            var maxDate = new Date(Date.now() + 62 * 60 * 60 * 1000).toISOString();
+            elem = document.getElementById("customer_availability_two")
+            var iso = new Date().toISOString();
+            var minDate = iso.substring(0,iso.length-1);
+            elem.min = minDate
+            elem.max = maxDate
+            console.log('min',minDate);
+            console.log('max',maxDate);
+        });
         let radioButtonPrior;
 
 

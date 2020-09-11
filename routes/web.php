@@ -29,6 +29,7 @@ Route::post('technicians/all', 'TechnicianController@getAll');
 Route::get('technicians/new', 'TechnicianController@newTechnicianView');
 Route::post('technician/save', 'TechnicianController@saveTechnician');
 Route::get('technicians/manage/{id}', 'TechnicianController@manageTechnician');
+Route::get('technicians/delete/{id}', 'TechnicianController@deleteTechnician');
 Route::post('technicians/update', 'TechnicianController@updateTechnician');
 Route::get('jobs', 'JobsController@getView');
 Route::post('jobs/all', 'JobsController@getAll');
@@ -48,6 +49,17 @@ Route::post('technician/files/save', 'TechnicianController@saveFiles');
 Route::get('new-job', 'JobsController@newJobView');
 Route::post('job/images/save', 'JobsController@saveImages');
 Route::post('followup/claim/denied', 'JobsController@denyFollowUpClaim');
-
+Route::post('followup/claim/approve', 'JobsController@approveFollowUpClaim');
+Route::post('claim/status/change', 'JobsController@changeStatusClaim');
+Route::post('cap/all', 'CapController@getAllCap');
+Route::get('cap', 'CapController@getView');
+Route::get('cap/new', 'CapController@newCapView');
+Route::post('cap/save', 'CapController@saveCap');
+Route::get('customer/{id}/details', 'CustomerController@getCustomerDetails');
+Route::post('cap/amount/add', 'CapController@addCapAmount');
+Route::get('reviews', 'ReviewController@getView');
+Route::get('caps/manage/{id}', 'CapController@manage');
+Route::post('cap/update', 'CapController@update');
+Route::get('caps/delete/{id}', 'CapController@deleteCap');
 
 
