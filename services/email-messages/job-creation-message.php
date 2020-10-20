@@ -11,7 +11,8 @@ class JobCreationMessage
              <div style="margin-left: 50px;font-size: 25px;padding-top: 40px">Your claim has been created. You can track it by following this link.</div><br>
 
  <div style="padding-top: 30px;padding-bottom: 40px">
- <a href="'. env('TECHNICIAN_URL'). '/job/'.$jobId.'/track" style=" background-color: #1AAA55;
+ <a href="'. env('TECHNICIAN_URL'). '/job/'.$jobId.'/track" style=" background-color: #f48134;
+    border-color: #f48134;
   border: none;
   color: white;
   padding: 10px 27px;

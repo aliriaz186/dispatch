@@ -61,5 +61,6 @@ Route::get('reviews', 'ReviewController@getView');
 Route::get('caps/manage/{id}', 'CapController@manage');
 Route::post('cap/update', 'CapController@update');
 Route::get('caps/delete/{id}', 'CapController@deleteCap');
+Route::post('change/claim/technician', 'TechnicianController@changeTechnician');
 
 

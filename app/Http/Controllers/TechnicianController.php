@@ -50,8 +50,9 @@ class TechnicianController extends Controller
 
     public function addNewJob(int $id){
         $technician = Technician::where('id', $id)->first();
+        $technicianList = Technician::all();
         $cap = Cap::all();
-        return view('dashboard.technician-new-job')->with(['caps' => $cap,'technician' => $technician]);
+        return view('dashboard.technician-new-job')->with(['technicianList' => $technicianList, 'caps' => $cap,'technician' => $technician]);
     }
 
     public function saveTechnician(Request $request){
@@ -256,5 +257,12 @@ class TechnicianController extends Controller
         );
 
         echo json_encode($json_data);
+    }
+
+    public function changeTechnician(Request $request)
+    {
+        $technician = DispatchJob::where('id', $request->job_id)->first();
+        $technician->id_technician = $request->technician_id;
+        return json_encode(['status' => $technician->update()]);
     }
 }

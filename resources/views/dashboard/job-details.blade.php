@@ -82,7 +82,7 @@
                             </div>
                             <div class="kt-portlet__body">
                                 <div class="row">
-                                    @if(!empty($ratings->rating))
+                                    @if(count($ratings) != 0)
                                         @foreach($ratings as $item)
                                             <div class="col-lg-12">
                                                 <p><span
@@ -118,6 +118,17 @@
                                 <div class="col-lg-12">
                                     <p> {{$job->status}} </p>
                                 </div>
+                                @if(\App\ClaimRescheduleNotHome::where('job_id', $job->id)->exists())
+                                    <div class="col-lg-12">
+                                    <p> We missed you, and will try you again on {{$schedule->date}} between
+                                        ({{$schedule->est_time_from}} - {{$schedule->est_time_to}}) </p>
+                                    </div>
+                                @endif
+                                @if($job->status == 'rejected')
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Reason:</span> {{\App\RejectClaimReason::where('job_id', $job->id)->first()['reason']}} </p>
+                                </div>
+                                @endif
                                 <div class="col-lg-12" id="text-div">
                                     <p style="text-decoration: underline;color: dodgerblue;cursor: pointer" onclick="showSelectField()"> Change Status </p>
                                 </div>
@@ -145,6 +156,30 @@
                             </div>
                         </div>
                     </div>
+                    @if($job->status == 'scheduled' || $job->status == 'On My Way' || $job->status == 'Job Started' || $job->status == 'Completed')
+                    <div class="kt-portlet kt-portlet--mobile">
+                        <div class="kt-portlet__head kt-portlet__head--lg">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title text-uppercase">
+                                    Worker Details
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Name:</span> {{$scheduledJob->name}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Email:</span> {{$scheduledJob->email}} </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Phone:</span> {{$scheduledJob->phone}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <div class="kt-portlet kt-portlet--mobile">
                         <div class="kt-portlet__head kt-portlet__head--lg">
                             <div class="kt-portlet__head-label">
@@ -281,6 +316,8 @@
                             </div>
                         </div>
                         <div class="kt-portlet__body">
+                            <p style="text-decoration: underline;color: dodgerblue;cursor: pointer" data-toggle="modal" data-target="#exampleModal"> Change Provider </p>
+                            @if(!empty($technician->name))
                             <div class="row">
                                 <div class="col-lg-12">
                                     <p><span style="font-weight: 500">Name:</span> {{$technician->name}} </p>
@@ -301,6 +338,13 @@
                                     <p><span style="font-weight: 500">Address:</span> {{$technician->address}} </p>
                                 </div>
                             </div>
+                            @else
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p><span style="font-weight: 500">Not Assigned Yet</span></p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="kt-portlet kt-portlet--mobile">
@@ -386,10 +430,109 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Change Technician</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+{{--                            <form method="post" action="" enctype="multipart/form-data">--}}
+                                <input id="job_id" name="job_id" value="{{$job->id}}" type="hidden">
+                                <select name="technician_id" id="technician_id"
+                                        class="form-control">
+                                    <option value="">Select Technician</option>
+                                    @foreach(\App\Technician::all() as $item)
+                                        <option value="{{$item->id}}">{{$item->name}} |
+                                            <ul style="float: right">
+                                                @foreach(\App\TechnicianWorkType::all() as $items)
+                                                    <li>{{$items->type}} ,</li>
+                                                @endforeach
+                                            </ul>
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div>
+                                    <button type="button" id="send-email-btn" class="btn btn-success"
+                                            style="background-color: #0780b7!important;border-color: #0780b7;color: white;margin-top: 15px;border: none!important;" onclick="changeTechnician()">Change Technician
+                                    </button>
+                                </div>
+{{--                            </form>--}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </form>
         <p id="long" style="display: none">{{$job->long}}</p>
         <p id="lat" style="display: none">{{$job->lat}}</p>
         <script>
+
+            function changeTechnician()
+            {
+                let data = new FormData();
+                let jobId = document.getElementById('job_id').value;
+                let jobStatus = document.getElementById('technician_id').value;
+                data.append("_token", "{{ csrf_token() }}");
+                data.append("technician_id", jobStatus);
+                data.append("job_id", jobId);
+                KTApp.blockPage({
+                    baseZ: 2000,
+                    overlayColor: '#000000',
+                    type: 'v1',
+                    state: 'danger',
+                    opacity: 0.15,
+                    message: 'Processing...'
+                });
+                $.ajax({
+                    url: "{{env('APP_URL')}}/change/claim/technician",
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result['status']) {
+                            // Disable Page Loading and show confirmation
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": "Technician Changed Successfully!",
+                                    "type": "success",
+                                    "showConfirmButton": false,
+                                    "timer": 1500,
+                                    "onClose": function (e) {
+                                        window.location.reload();
+                                    }
+                                })
+                            }, 2000);
+                        } else {
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            setTimeout(function () {
+                                swal.fire({
+                                    "title": "",
+                                    "text": result['message'],
+                                    "type": "error",
+                                    "confirmButtonClass": "btn btn-secondary",
+                                    "onClose": function (e) {
+                                        console.log('on close event fired!');
+                                    }
+                                })
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+
             function showSelectField()
             {
                 document.getElementById('statusChangeDiv').style.display = 'Block';
