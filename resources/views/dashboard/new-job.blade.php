@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Estate <span class="text-danger">*</span></label>
+                                <label>State <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fas fa-map-marker-alt"></i></span></div>
@@ -60,15 +60,29 @@
                                            class="form-control" placeholder="Enter zip code">
                                 </div>
                             </div>
-                            <div class="col-lg-12" style="margin-top: 20px !important;">
-                                <label>Technician <span class="text-danger">*</span></label>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label class="">Customer Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                       placeholder="Enter full name">
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Customer Email <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fas fa-user"></i></span></div>
-                                    <input type="text" name="technician_name" id="technician_name"
-                                           class="form-control" placeholder="Select nearby provider from map" readonly>
-                                    <input type="text" name="technician_id" id="technician_id"
-                                           class="form-control" style="display: none">
+                                                class="fa fa-envelope"></i></span></div>
+                                    <input type="text" name="email" id="email"
+                                           class="form-control"
+                                           placeholder="Enter email">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
+                                <label>Customer Phone <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                                class="fa fa-phone"></i></span></div>
+                                    <input type="text" name="phone" id="phone"
+                                           class="form-control"
+                                           placeholder="Enter phone">
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -108,7 +122,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Model No <span class="text-danger">*</span></label>
+                                <label>Model No </label>
                                 <div class="input-group">
 {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
 {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
@@ -117,7 +131,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Serial No <span class="text-danger">*</span></label>
+                                <label>Serial No </label>
                                 <div class="input-group">
 {{--                                    <div class="input-group-prepend"><span class="input-group-text"></span></div>--}}
                                     <input type="text" name="serialNo" id="serialNo"
@@ -131,6 +145,28 @@
                                         <input id="priorIssueYes" name="priorIssue" type="radio"><span style="margin-top: -3px;margin-left: 6px;">Yes</span>
                                         <input id="priorIssueNo" name="priorIssue" style="margin-left: 18px" type="radio"><span style="margin-top: -3px;margin-left: 6px;">No</span>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 20px !important;">
+                                <label>Technician </label>
+                                <div class="input-group">
+                                    <select name="technician_id" id="technician_id"
+                                            class="form-control">
+                                        <option value="">Select Technician</option>
+                                        @foreach($technicianList as $item)
+                                            <option value="{{$item->id}}">{{$item->name}} |
+                                                <ul style="float: right">
+                                                    @foreach(\App\TechnicianWorkType::all() as $items)
+                                                        <li>{{$items->type}} ,</li>
+                                                    @endforeach
+                                                </ul>
+                                            </option>
+                                        @endforeach
+                                    </select>
+{{--                                    <input type="text" name="technician_name" id="technician_name"--}}
+{{--                                           class="form-control" placeholder="Select nearby provider from map" readonly>--}}
+{{--                                    <input type="text" name="technician_id" id="technician_id"--}}
+{{--                                           class="form-control" style="display: none">--}}
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -152,31 +188,6 @@
                                         <option value="{{$item->name ?? ''}}">
                                     @endforeach
                                 </datalist>
-                            </div>
-                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label class="">Customer Name <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control"
-                                       placeholder="Enter full name">
-                            </div>
-                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Customer Email <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fa fa-envelope"></i></span></div>
-                                    <input type="text" name="email" id="email"
-                                           class="form-control"
-                                           placeholder="Enter email">
-                                </div>
-                            </div>
-                            <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
-                                <label>Customer Phone <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fa fa-phone"></i></span></div>
-                                    <input type="text" name="phone" id="phone"
-                                           class="form-control"
-                                           placeholder="Enter phone">
-                                </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
                                 <label>Customer Availability</label>
@@ -505,9 +516,6 @@
                         itemType: {required: true},
                         itemLocation: {required: true},
                         issueDetails: {required: true},
-                        modelNo: {required: true},
-                        serialNo: {required: true},
-                        technician_name: {required: true},
                         title: {required: true},
                         description: {required: true},
                         service_type: {required: true},
@@ -526,9 +534,6 @@
                         itemType: "Please enter item type",
                         itemLocation: "Please enter item location",
                         issueDetails: "Please enter issue details",
-                        modelNo: "Please enter model no",
-                        serialNo: "Please enter serial no",
-                        technician_name: "Please select technician from map",
                         title: "Please enter title",
                         description: "Please enter description",
                         service_type: "Please enter service type",

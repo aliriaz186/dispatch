@@ -23,12 +23,12 @@ class CreateDispatchJobsTable extends Migration
             $table->string('item_type');
             $table->string('item_location');
             $table->string('issue_details');
-            $table->string('model_no');
-            $table->string('serial_no');
+            $table->string('model_no')->nullable();
+            $table->string('serial_no')->nullable();
             $table->string('prior_issue');
             $table->string('long');
             $table->string('lat');
-            $table->integer('id_technician');
+            $table->integer('id_technician')->nullable();
             $table->integer('id_customer');
             $table->string('title');
             $table->string('description');

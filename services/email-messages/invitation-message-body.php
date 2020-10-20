@@ -12,7 +12,8 @@ class InvitationMessageBody
             <div style="padding-left: 50px;font-size: 18px;padding-right: 50px">Your Username is  : '.$username.'</div><br>
             <div style="padding-left: 50px;font-size: 18px;padding-right: 50px">Your Password is  : '.$password.'</div>
  <div style="padding-top: 30px;padding-bottom: 40px">
- <a href="'. env('TECHNICIAN_URL'). '" style=" background-color: #1AAA55;
+ <a href="'. env('TECHNICIAN_URL'). '" style=" background-color: #f48134;
+    border-color: #f48134;
   border: none;
   color: white;
   padding: 10px 27px;

@@ -75,10 +75,10 @@
                                id="technician-table">
                             <thead>
                             <tr>
-                                <th>#ID</th>
+                                <th>Service Contract #</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
+                                <th>Phone #</th>
                                 <th></th>
                             </tr>
                             </thead>

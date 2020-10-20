@@ -71,22 +71,24 @@
                                id="technician-table">
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Total Amount</th>
-                                <th>Amount Added</th>
+                                <th>Service Contract #</th>
+                                <th>Item Type</th>
+                                <th>Current Amount</th>
+                                <th>CAP</th>
                                 <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($cap as $item)
                                 <tr>
+                                    <td>{{$item->id}}</td>
                                 <td>{{$item->name}}</td>
+                                    @if(\App\CustomerCapAmount::where(['customer_id' => $customerId,'cap_id' => $item->id])->exists())
+                                        <td>${{\App\CustomerCapAmount::where(['customer_id' => $customerId,'cap_id' => $item->id])->first()['amount_added']}}</td>
+                                    @else
+                                        <td>$0</td>
+                                    @endif
                                 <td>{{$item->total_amount}}</td>
-                                @if(\App\CustomerCapAmount::where(['customer_id' => $customerId,'cap_id' => $item->id])->exists())
-                                    <td>${{\App\CustomerCapAmount::where(['customer_id' => $customerId,'cap_id' => $item->id])->first()['amount_added']}}</td>
-                                @else
-                                    <td>$0</td>
-                                @endif
                                 <td>
                                     <a data-toggle="modal" data-target="#modalContactForm" onclick="capId({{$item->id}})"
                                        class="btn btn-brand btn-elevate btn-icon-sm" style="color: white">

@@ -10,9 +10,12 @@ use App\JobCompletionStatus;
 use App\JobImages;
 use App\JobRating;
 use App\Jobs\CustomerJobCreatedEmail;
+use App\ScheduledJob;
 use App\Technician;
+use App\Worker;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use services\email_messages\JobAssignedToTechnicianMessage;
 use services\email_messages\JobCreationMessage;
 use services\email_services\EmailAddress;
 use services\email_services\EmailBody;
@@ -30,8 +33,9 @@ class JobsController extends Controller
     }
 
     public function newJobView(){
+        $technicianList = Technician::all();
         $cap = Cap::all();
-        return view('dashboard.new-job')->with(['caps' => $cap]);
+        return view('dashboard.new-job')->with(['caps' => $cap,'technicianList' => $technicianList]);
     }
 
     public function saveJob(Request $request){
@@ -72,6 +76,17 @@ class JobsController extends Controller
             $mailTo = new EmailAddress($customer->email);
             $invitationMessage = new JobCreationMessage();
             $emailBody = $invitationMessage->creationMessage($this->jobId);
+            $body = new EmailBody($emailBody);
+            $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
+            $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
+            $result = $sendEmail->send($emailMessage);
+
+            $subject = new SendEmailService(new EmailSubject("Hi, Claim has been offered to you by ".env('APP_NAME')));
+            $this->jobId = JWT::encode(['jobId' => $job->id], 'dispatchEncodeSecret-2020');
+            $techEmail = Technician::where('id', $request->technician_id)->first()['email'];
+            $mailTo = new EmailAddress($techEmail);
+            $invitationMessage = new JobAssignedToTechnicianMessage();
+            $emailBody = $invitationMessage->creationMessage();
             $body = new EmailBody($emailBody);
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
@@ -140,8 +155,15 @@ class JobsController extends Controller
                 $appUrl = env('APP_URL');
                 $nestedData['id'] = "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$job->id</a>";
                 $nestedData['status'] = $job->status;
+                $createdAt = explode(' ',$job->created_at)[0];
+                $nestedData['created_at'] = $createdAt;
                 $nestedData['customer'] = "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$customer->name ($customer->phone)</a>";
-                $nestedData['technician'] =  "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$technician->name ($technician->phone)</a>";
+                if(!empty($technician->name))
+                {
+                    $nestedData['technician'] =  "<a href='$appUrl/jobs/$job->id/details' style='color: #5d78ff'>$technician->name ($technician->phone)</a>";
+                }else{
+                    $nestedData['technician'] =  "Not Assigned";
+                }
                 $nestedData['title'] =  $job->title;
                 $nestedData['address'] =  $job->job_address;
                 $data[] = $nestedData;
@@ -166,7 +188,11 @@ class JobsController extends Controller
         $followUp = ClaimFollowUp::where('job_id', $jobId)->first();
         $jobCompletionStatus = JobCompletionStatus::where('job_id', $jobId)->first();
         $ratings = JobRating::where('jobId', $jobId)->get();
-        return view('dashboard.job-details')->with(['ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
+        $workerId = ScheduledJob::where('id_job', $jobId)->first()['id_worker'];
+        $scheduledJob = Worker::where('id', $workerId)->first();
+        $schedule = ScheduledJob::where('id_job', $jobId)->first();
+
+        return view('dashboard.job-details')->with(['schedule' => $schedule,'scheduledJob' => $scheduledJob, 'ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
     }
 
     public function denyFollowUpClaim(Request $request)

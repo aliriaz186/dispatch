@@ -77,6 +77,7 @@
                             <thead>
                             <tr>
                                 <th>Claim No</th>
+                                <th>Date Claim Created</th>
                                 <th>Status</th>
                                 <th>Customer</th>
                                 <th>Technician</th>
@@ -113,6 +114,7 @@
                 },
                 "columns": [
                     { "data": "id" },
+                    { "data": "created_at" },
                     { "data": "status" },
                     { "data": "customer" },
                     { "data": "technician" },
