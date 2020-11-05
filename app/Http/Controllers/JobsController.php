@@ -91,7 +91,7 @@ class JobsController extends Controller
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
-//            $this->sendMessage($request->phone, "Your claim has been created in ".env('APP_NAME') ."\nYou can track it by following this link.\n" . env('TECHNICIAN_URL'). "/job/".$this->jobId."/track");
+            $this->sendMessage($request->phone, "Your claim has been created in ".env('APP_NAME') ."\nYou can track it by following this link.\n" . env('TECHNICIAN_URL'). "/job/".$this->jobId."/track");
             return json_encode(['status' => $result,'job_id' => $job->id]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);

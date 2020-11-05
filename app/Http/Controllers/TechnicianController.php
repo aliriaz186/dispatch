@@ -108,7 +108,7 @@ class TechnicianController extends Controller
             $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
-//            $this->sendMessage($request->phone, "You are invited to use ".env('APP_NAME') ."\nPlease Login to start your business\n" . "Your Password is  : .$this->password.\n" . env('TECHNICIAN_URL'));
+            $this->sendMessage($request->phone, "You are invited to use ".env('APP_NAME') ."\nPlease Login to start your business\n" . "Your Password is  : .$this->password.\n" . env('TECHNICIAN_URL'));
             return json_encode(['status' => $result, 'technician_id' => $technician->id]);
         } catch (\Exception $exception) {
             return json_encode(['status' => false, 'message' => $exception->getMessage()]);
