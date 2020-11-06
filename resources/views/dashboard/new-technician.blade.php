@@ -98,8 +98,8 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
-                                        <input type="text" name="address" id="address" readonly
-                                               class="form-control" placeholder="Please Select From Map" onkeypress="codeAddress(event)">
+                                        <input type="text" name="address" id="address"
+                                               class="form-control" placeholder="Please Select From Map">
                                     </div>
                                 </div>
                                 <div class="mt-3 col-lg-12">
@@ -293,132 +293,77 @@
                 event.preventDefault();
             }
         </script>
+
+
+
+
+
+{{--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--}}
         <script>
-            var marker = false; ////Has the user plotted their location marker?
+            var placeSearch, autocomplete;
+            var componentForm = {
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name',
+                postal_code: 'short_name'
+            };
+            if (typeof google === 'undefined') {
+                jQuery.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyCAvtI1ZrCuDMrMkldOB4RJEus-8r0LtNc&libraries=geometry,places', () => {
+                    var input = document.getElementById('address');
+                    autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']} );
+                    autocomplete.setFields(['address_component']);
+                    autocomplete.addListener('place_changed', fillIn);
+                });
+            }else{
+                var input = document.getElementById('address');
+                autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']} );
+                autocomplete.setFields(['address_component']);
+                autocomplete.addListener('place_changed', fillIn);
+            }
+            function fillIn() {
+                var geocoder = new google.maps.Geocoder();
+                var address = document.getElementById('address').value;
+
+                geocoder.geocode({
+                    'address': address
+                }, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        var latitude = results[0].geometry.location.lat();
+                        var longitude = results[0].geometry.location.lng();
+                        document.getElementById('lat').value = latitude;
+                        document.getElementById('longg').value = longitude;
+                        lati = latitude;
+                        longi = longitude;
+                        initMap();
+                    }
+                });
+            }
+        </script>
+        <script>
+            var marker = false;
             var lati = 25.785257;
             var longi = -80.221207;
             var map, infoWindow, geocoder;
             function initMap() {
-                 map = new google.maps.Map(document.getElementById('map'), {
+                map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 10,
                     center: {lat: lati, lng: longi}
                 });
-                 geocoder = new google.maps.Geocoder;
+                geocoder = new google.maps.Geocoder;
                 infoWindow = new google.maps.InfoWindow;
-                getTechnicianMarkerts();
-
-                google.maps.event.addListener(map, 'click', function(event) {
-                    //Get the location that the user clicked.
-                    var clickedLocation = event.latLng;
-                    //If the marker hasn't been added.
-                    if(marker === false){
-                        //Create the marker.
-                        marker = new google.maps.Marker({
-                            position: clickedLocation,
-                            map: map,
-                            draggable: true //make it draggable
-                        });
-                        //Listen for drag events!
-                        google.maps.event.addListener(marker, 'dragend', function(event){
-                            markerLocation();
-                        });
-                    } else{
-                        //Marker has already been added, so just change its location.
-                        marker.setPosition(clickedLocation);
-
-                    }
-                    //Get the marker's location.
-                    markerLocation();
-                });
             }
-
-            function geocodeLatLng(geocoder, map, infowindow) {
-
-            }
-            function moveToLocation(lat, lng){
-                var center = new google.maps.LatLng(lat, lng);
-                map.panTo(center);
-            }
-
-            function codeAddress(event) {
-                if (event.key !== "Enter"){
-                    return;
-                }
-                event.preventDefault();
-                geocoder = new google.maps.Geocoder();
-                let address = document.getElementById("address").value;
-                geocoder.geocode( { 'address': address}, function(results, status) {
-                    if (status === google.maps.GeocoderStatus.OK) {
-                        let gotlat = results[0].geometry.location.lat();
-                        let gotlong = results[0].geometry.location.lng();
-                        moveToLocation(gotlat, gotlong);
-                        document.getElementById('lat').value = gotlat;
-                        document.getElementById('longg').value = gotlong;
-                        let markernew = new google.maps.Marker({
-                            position: new google.maps.LatLng(gotlat, gotlong),
-                            map: map,
-                            title: 'Technician Location'
-                        });
-                    }
-                    else {
-                        alert("Geocode was not successful for the following reason: " + status);
-                    }
-                });
-            }
-
-            function getTechnicianMarkerts() {
-                $.ajax({
-                    url: `{{env('APP_URL')}}/api/technicians/get`,
-                    type: 'GET',
-                    dataType: "JSON",
-                    beforeSend: function () {
-                        $('#main-form').append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-                    },
-                    success: function (result) {
-                        let techniciansList = result;
-                        for(let i=0;i<techniciansList.length;i++){
-                            var myLatLng = {lat: parseFloat(techniciansList[i].lat)  , lng: parseFloat(techniciansList[i].longg)};
-                            var mymarker = new google.maps.Marker({
-                                position: myLatLng,
-                                title:techniciansList[i].name,
-                                icon: document.getElementById('technician-icon').getAttribute('src'),
-                            });
-                            mymarker.setMap(map);
-                        }
-                    }
-                });
-            }
-
-            function markerLocation(){
-                //Get location.
-                var currentLocation = marker.getPosition();
-                //Add lat and lng values to a field that we can save.
-                var newlat = currentLocation.lat(); //latitude
-                var newlong = currentLocation.lng(); //longitude
-                document.getElementById('lat').value = newlat;
-                document.getElementById('longg').value = newlong;
-                console.log(newlong);
-                console.log(newlat);
-                var myurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +newlat+ "," +newlong+"&key=AIzaSyBiWCqUwYcKgZyvusgkFOKfop1vA2dLZnE";
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function(e) {
-                    if (this.readyState === 4 && this.status === 200) {
-                        let data = JSON.parse(e.srcElement.response);
-                        var dat = JSON.stringify(data.results);
-                        console.log(data);
-                        var address= data.results[1].formatted_address;
-                       document.getElementById('address').value = address;
-                    }
-                };
-                xhttp.open("GET", myurl, true);
-                xhttp.send();
-
-            }
-
         </script>
         <script async defer
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqJcwaHOlWKivApYFYSjmVobGeKFqGdE&callback=initMap">
         </script>
+
+
+
+
+
+
+
+
+
     </div>
 
     <!-- end:: Content -->

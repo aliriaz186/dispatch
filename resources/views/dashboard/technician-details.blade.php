@@ -1,23 +1,18 @@
 @extends('dashboard.layout')
-<!-- begin:: Content -->
 @section('content')
     <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
-
-        <!--Begin::Dashboard 1-->
-
-        <!--Begin::Row-->
         <form action="#" method="POST" id="listing_form" class="form-horizontal listing_form">
             {{ csrf_field() }}
 
             <div class="row" style="margin-bottom: 10px!important;">
                 <div  class="col-xl-12 order-lg-12 order-xl-12">
-                    <div>
-                        <a style="float: right" href="{{env('APP_URL')}}/technicians/{{$technician->id}}/jobs/new"
-                             class="btn btn-brand btn-elevate btn-icon-sm">
-                            <i class="la la-plus"></i>
-                            Add Claim
-                        </a>
-                    </div>
+{{--                    <div>--}}
+{{--                        <a style="float: right" href="{{env('APP_URL')}}/technicians/{{$technician->id}}/jobs/new"--}}
+{{--                             class="btn btn-brand btn-elevate btn-icon-sm">--}}
+{{--                            <i class="la la-plus"></i>--}}
+{{--                            Add Claim--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
                 </div>
             </div>
             <div class="row">
