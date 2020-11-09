@@ -99,7 +99,7 @@
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
                                         <input type="text" name="address" id="address"
-                                               class="form-control" placeholder="Please Select From Map">
+                                               class="form-control" placeholder="Please enter address" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="mt-3 col-lg-12">
@@ -307,7 +307,7 @@
                 postal_code: 'short_name'
             };
             if (typeof google === 'undefined') {
-                jQuery.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyCAvtI1ZrCuDMrMkldOB4RJEus-8r0LtNc&libraries=geometry,places', () => {
+                jQuery.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC141fW_XoCD_dJHMaTygnLX1kDLeTWcwo&libraries=geometry,places', () => {
                     var input = document.getElementById('address');
                     autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']} );
                     autocomplete.setFields(['address_component']);
