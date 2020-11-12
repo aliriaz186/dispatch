@@ -101,16 +101,20 @@ class JobsController extends Controller
             $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
             $result = $sendEmail->send($emailMessage);
 
-            $subject = new SendEmailService(new EmailSubject("Hi, Claim has been offered to you by ".env('APP_NAME')));
-            $this->jobId = JWT::encode(['jobId' => $job->id], 'dispatchEncodeSecret-2020');
-            $techEmail = Technician::where('id', $request->technician_id)->first()['email'];
-            $mailTo = new EmailAddress($techEmail);
-            $invitationMessage = new JobAssignedToTechnicianMessage();
-            $emailBody = $invitationMessage->creationMessage();
-            $body = new EmailBody($emailBody);
-            $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
-            $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
-            $result = $sendEmail->send($emailMessage);
+            if (!empty($request->technician_id)){
+                $subject = new SendEmailService(new EmailSubject("Hi, Claim has been offered to you by ".env('APP_NAME')));
+                $this->jobId = JWT::encode(['jobId' => $job->id], 'dispatchEncodeSecret-2020');
+                $techEmail = Technician::where('id', $request->technician_id)->first()['email'];
+                $mailTo = new EmailAddress($techEmail);
+                $invitationMessage = new JobAssignedToTechnicianMessage();
+                $emailBody = $invitationMessage->creationMessage();
+                $body = new EmailBody($emailBody);
+                $emailMessage = new EmailMessage($subject->getEmailSubject(), $mailTo, $body);
+                $sendEmail = new EmailSender(new PhpMail(new MailConf("smtp.gmail.com", "admin@dispatch.com", "secret-2020")));
+                $result = $sendEmail->send($emailMessage);
+            }
+
+
             $this->sendMessage($request->phone, "Your claim has been created in ".env('APP_NAME') ."\nYou can track it by following this link.\n" . env('TECHNICIAN_URL'). "/job/".$this->jobId."/track");
             return json_encode(['status' => $result,'job_id' => $job->id]);
         } catch (\Exception $exception) {
