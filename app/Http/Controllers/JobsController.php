@@ -57,8 +57,28 @@ class JobsController extends Controller
             $job->model_no = $request->modelNo;
             $job->serial_no = $request->serialNo;
             $job->prior_issue = $request->radioButtonPrior;
-            $job->lat = $request->lat;
-            $job->long = $request->longg;
+
+            if (empty($request->lat) || empty($request->longg)){
+                try {
+                    $address = $request->address;
+                    $latlong = $this->get_lat_long($address);
+                    $map = explode(',', $latlong);
+                    $address = str_replace(" ", "+", $address);
+                    $json = file_get_contents("https://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=usa&key=AIzaSyC141fW_XoCD_dJHMaTygnLX1kDLeTWcwo");
+                    $json = json_decode($json);
+                    $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+                    $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+                    $job->lat = $lat;
+                    $job->long = $long;
+                }catch (\Exception $exception){
+                    $job->lat = 25.9420377;
+                    $job->long = -80.2456045;
+                }
+
+            }else{
+                $job->lat = $request->lat;
+                $job->long = $request->longg;
+            }
             $job->id_technician = $request->technician_id;
             $job->id_customer = $customer->id;
             $job->title = $request->title;
