@@ -52,6 +52,27 @@
                         </div>
                     </div>
                     @endif
+                    @if($job->status == 'Completed')
+                        <div class="kt-portlet kt-portlet--mobile">
+                            <div class="kt-portlet__head kt-portlet__head--lg">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title text-uppercase">
+                                        Claim Invoice
+                                    </h3>
+                                </div>
+                            </div>
+                            @if(!\App\JobInvoices::where('job_id', $job->id)->exists())
+                                <div class="kt-portlet__body">
+                                    <p>No Invoice attached yet.</p>
+                                </div>
+                            @else
+                                <div style="margin-left: 10px">
+                                    <a target="_blank" href="{{env('TECHNICIAN_URL')}}/new-invoices/{{\App\JobInvoices::where('job_id', $job->id)->first()['invoice']}}">
+                                        <img style="padding:20px;object-fit: cover;border: 1px solid #a9a9a973;width: 200px;height: 200px;" alt="Click to Open" src="{{env('TECHNICIAN_URL')}}/new-invoices/{{\App\JobInvoices::where('job_id', $job->id)->first()['invoice']}}"></a>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                     @if(\App\DispatchJob::where('id', $job->id)->first()['status'] == 'Completed')
                         <div class="kt-portlet kt-portlet--mobile">
                             <div class="kt-portlet__head kt-portlet__head--lg">
@@ -210,29 +231,16 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <p><span style="font-weight: 500">Address:</span> {{$job->job_address}} </p>
+                                </div>
+                                <div class="col-lg-12">
                                     <p><span style="font-weight: 500">City:</span> {{$job->city}} </p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <p><span style="font-weight: 500">Estate:</span> {{$job->estate}} </p>
+                                    <p><span style="font-weight: 500">State:</span> {{$job->estate}} </p>
                                 </div>
                                 <div class="col-lg-12">
                                     <p><span style="font-weight: 500">Zip Code:</span> {{$job->zip_code}} </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kt-portlet kt-portlet--mobile">
-                        <div class="kt-portlet__head kt-portlet__head--lg">
-                            <div class="kt-portlet__head-label">
-                                <h3 class="kt-portlet__head-title text-uppercase">
-                                    Claim Location
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="kt-portlet__body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <p> {{$job->job_address}} </p>
                                 </div>
                             </div>
                         </div>
@@ -300,8 +308,16 @@
                         <div class="kt-portlet__body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <p><span style="font-weight: 500">First:</span> {{$job->customer_availability_one}} </p>
-                                    <p><span style="font-weight: 500">Second:</span> {{$job->customer_availability_two}} </p>
+                                    <p><span style="font-weight: 500">First:</span>
+                                        @if(!empty($job->customer_availability_one))
+                                            {{date('Y-m-d h:i A', strtotime($job->customer_availability_one)) ?? ''}}
+                                        @endif
+                                    </p>
+                                    <p><span style="font-weight: 500">Second:</span>
+                                        @if(!empty($job->customer_availability_two))
+                                            {{date('Y-m-d h:i A', strtotime($job->customer_availability_two)) ?? ''}}
+                                        @endif
+                                    </p>
 {{--                                    <p><span style="font-weight: 500">Third:</span> {{$job->customer_availability_three}} </p>--}}
                                 </div>
                             </div>

@@ -124,6 +124,10 @@
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/cap" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-hand-holding-usd"></i></span><span
                                     class="kt-menu__link-text">Cap</span></a></li>
+                        <li class="kt-menu__item {{ (Request::segment(1) == 'invoices') ? 'kt-menu__item--active' : '' }}"
+                            aria-haspopup="true"><a href="{{env('APP_URL')}}/invoices" class="kt-menu__link "><span
+                                    class="kt-menu__link-icon"><i class="fas fa-file-invoice"></i></span><span
+                                    class="kt-menu__link-text">Invoices</span></a></li>
                         <li class="kt-menu__item {{ (Request::segment(1) == 'reviews') ? 'kt-menu__item--active' : '' }}"
                             aria-haspopup="true"><a href="{{env('APP_URL')}}/reviews" class="kt-menu__link "><span
                                     class="kt-menu__link-icon"><i class="fas fa-star-half-alt"></i></span><span

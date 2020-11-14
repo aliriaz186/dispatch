@@ -52,6 +52,9 @@
                                     <p><i class="fas fa-location-arrow mr-1"></i>  {{$technician->address}} </p>
                                 </div>
                                 <div class="col-lg-12">
+                                    <p><i class="fas fa-location-arrow mr-1"></i>  {{$technician->state ?? ''}} </p>
+                                </div>
+                                <div class="col-lg-12">
                                     <p><i class="fas flaticon2-website mr-1"></i>  {{$technician->website}} </p>
                                 </div>
                             </div>

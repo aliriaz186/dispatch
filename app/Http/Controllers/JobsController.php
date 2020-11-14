@@ -235,7 +235,7 @@ class JobsController extends Controller
     {
         try {
             $dispatchJob = DispatchJob::where('id', $request->jobId)->first();
-            $dispatchJob->status = 'scheduled';
+            $dispatchJob->status = "Job Started";
             $result = $dispatchJob->update();
             return json_encode(['status' => $result]);
         } catch (\Exception $exception) {

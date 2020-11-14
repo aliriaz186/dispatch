@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cap;
 use App\Customer;
+use App\DispatchJob;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -37,7 +38,14 @@ class CustomerController extends Controller
         if (!empty($customers)) {
             foreach ($customers as $customer) {
                 $appUrl = env('APP_URL');
-                $nestedData['id'] = "<a href='$appUrl/customer/$customer->id/details' style='color: #5d78ff'>$customer->id</a>";
+                $policyNumber = $customer->id;
+                try {
+                    $policyNumber = DispatchJob::where('id_customer', $customer->id)->first()['policy_no'];
+
+                }catch (\Exception $exception){
+                    $policyNumber = $customer->id;
+                }
+                $nestedData['id'] = "<a href='$appUrl/customer/$customer->id/details' style='color: #5d78ff'>$policyNumber</a>";
                 $nestedData['name'] = "<a href='$appUrl/customer/$customer->id/details' style='color: #5d78ff'>$customer->name</a>";;
                 $nestedData['email'] = $customer->email;
                 $nestedData['phone'] = $customer->phone;

@@ -67,6 +67,8 @@ class TechnicianController extends Controller
             $technician->name = $request->name;
             $technician->email = $request->email;
             $technician->address = $request->address;
+            $technician->city = $request->city;
+            $technician->state = $request->state;
             $technician->website = $request->website;
             $technician->longg = $request->longg;
             $technician->lat = $request->lat;
@@ -264,5 +266,24 @@ class TechnicianController extends Controller
         $technician = DispatchJob::where('id', $request->job_id)->first();
         $technician->id_technician = $request->technician_id;
         return json_encode(['status' => $technician->update()]);
+    }
+
+    public function getProviderAgainstZipCode(Request $request){
+        $allProviders = Technician::all();
+        $providers = [];
+        foreach ($allProviders as $provider){
+           $provider['work_types'] = TechnicianWorkType::where('technician_id', $provider->id)->get();
+           $provider['zip_codes'] = TechnicianZipCode::where('technician_id', $provider->id)->get();
+           $flag = false;
+           foreach ($provider['zip_codes'] as $zip_code){
+               if ($zip_code->zip_code == $request->zipCode){
+                   $flag = true;
+               }
+           }
+           if ($flag){
+               array_push($providers, $provider);
+           }
+        }
+        return json_encode($providers);
     }
 }

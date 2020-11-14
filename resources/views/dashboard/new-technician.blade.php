@@ -82,6 +82,16 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
+
+                                <div class="col-lg-4">
+                                    <label>Office Address <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i
+                                                    class="fas fa-map-marker-alt"></i></span></div>
+                                        <input type="text" name="address" id="address"
+                                               class="form-control" placeholder="Please enter address" autocomplete="off">
+                                    </div>
+                                </div>
                                 <div class="col-lg-4">
                                     <label>Service Area Coverage <span class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -92,19 +102,29 @@
                                                placeholder="Press Enter to Add Multiple Zip Code"
                                                onkeypress="addMultipleZipCode(event,value)">
                                     </div>
+                                    <div class="mt-3 col-lg-12">
+                                        <span class="small my-2" id="append-span"></span>
+                                    </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <label>Office Address <span class="text-danger">*</span></label>
+                                    <label>Office City <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                     class="fas fa-map-marker-alt"></i></span></div>
-                                        <input type="text" name="address" id="address"
-                                               class="form-control" placeholder="Please enter address" autocomplete="off">
+                                        <input type="text" name="city" id="city"
+                                               class="form-control" placeholder="Please enter city" autocomplete="off">
                                     </div>
                                 </div>
-                                <div class="mt-3 col-lg-12">
-                                    <span class="small my-2" id="append-span"></span>
+                                <div class="col-lg-4 mt-2">
+                                    <label>Office State <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i
+                                                    class="fas fa-map-marker-alt"></i></span></div>
+                                        <input type="text" name="state" id="state"
+                                               class="form-control" placeholder="Please enter state" autocomplete="off">
+                                    </div>
                                 </div>
+
                             </div>
                             <div class="row mt-4">
                                 <div class="col-lg-12">
@@ -302,9 +322,11 @@
         <script>
             var placeSearch, autocomplete;
             var componentForm = {
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name',
-                postal_code: 'short_name'
+                // locality: 'long_name',
+                // administrative_area_level_1: 'short_name',
+                // postal_code: 'short_name',
+                city: 'short_name',
+                state: 'short_name'
             };
             if (typeof google === 'undefined') {
                 jQuery.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC141fW_XoCD_dJHMaTygnLX1kDLeTWcwo&libraries=geometry,places', () => {
@@ -320,6 +342,7 @@
                 autocomplete.addListener('place_changed', fillIn);
             }
             function fillIn() {
+                console.log(componentForm);
                 var geocoder = new google.maps.Geocoder();
                 var address = document.getElementById('address').value;
 
@@ -336,6 +359,23 @@
                         initMap();
                     }
                 });
+
+
+                var place = autocomplete.getPlace();
+
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+
+                    if (addressType === 'administrative_area_level_1'){
+                        var val = place.address_components[i]['long_name'];
+                       document.getElementById('city').value = val;
+                        document.getElementById('state').value = val;
+                    }
+                    if (addressType === 'postal_code'){
+                        var val = place.address_components[i]['long_name'];
+                       document.getElementById('zipCode').value = val;
+                    }
+                }
             }
         </script>
         <script>

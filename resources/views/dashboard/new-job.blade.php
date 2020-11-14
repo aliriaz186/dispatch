@@ -57,7 +57,7 @@
                                     {{--                                    <div class="input-group-prepend"><span class="input-group-text"><i--}}
                                     {{--                                                class="fas fa-map-marker-alt"></i></span></div>--}}
                                     <input type="text" name="zipCode" id="zipCode"
-                                           class="form-control" placeholder="Enter zip code">
+                                           class="form-control" placeholder="Enter zip code" onchange="zipCodeAdded(this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2" style="margin-top: 20px !important;">
@@ -147,12 +147,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12" style="margin-top: 20px !important;">
-                                <label>Technician </label>
+                            <div class="col-lg-12" style="margin-top: 20px !important;border: 1px solid black;padding: 10px">
+                                <label>Service Provider Selection</label>
                                 <div class="input-group">
                                     <select name="technician_id" id="technician_id"
-                                            class="form-control">
+                                            class="form-control" style="display: none">
                                         <option value="">Select Technician</option>
+                                        <div></div>
                                         @foreach($technicianList as $item)
                                             <option value="{{$item->id}}">{{$item->name}} |
                                                 <ul style="float: right">
@@ -163,6 +164,27 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <p>We are showing providers that are near to the zip code you entered above</p>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Select</th>
+                                            <th>Provider</th>
+                                            <th>Services</th>
+                                            <th>ZIP Codes coverage</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tec_body">
+{{--                                        @foreach($technicianList as $item)--}}
+{{--                                            <tr>--}}
+{{--                                                <td><input type="radio" name="tech_selected"></td>--}}
+{{--                                                <td>{{$item->name}}</td>--}}
+{{--                                                <td>{{$item->name}}</td>--}}
+{{--                                                <td>{{$item->name}}</td>--}}
+{{--                                            </tr>--}}
+{{--                                        @endforeach--}}
+                                        </tbody>
+                                    </table>
 {{--                                    <input type="text" name="technician_name" id="technician_name"--}}
 {{--                                           class="form-control" placeholder="Select nearby provider from map" readonly>--}}
 {{--                                    <input type="text" name="technician_id" id="technician_id"--}}
@@ -321,6 +343,58 @@
         </script>
 
         <script>
+            function techSelected(value) {
+                document.getElementById('technician_id').value = value;
+            }
+            function zipCodeAdded(value) {
+                if(value === '' || value === undefined){
+                    return;
+                }
+                let data = {zipCode : value, "_token" : "{{ csrf_token() }}"}
+                $.ajax({
+                    url: "{{env('APP_URL')}}/get-provider-against-zip-code",
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: data,
+                    success: function (result) {
+                       let providers = result;
+                       if(providers.length === 0){
+                           document.getElementById('tec_body').innerHTML = '';
+                           document.getElementById('tec_body').innerHTML = 'OOPS! No Provider Found near the area.';
+                       }else{
+                           document.getElementById('tec_body').innerHTML = '';
+                           for (let i=0;i<providers.length;i++){
+                               let tr = document.createElement('tr');
+                               let td1 = document.createElement('td');
+                               let td2 = document.createElement('td');
+                               let td3 = document.createElement('td');
+                               let td4 = document.createElement('td');
+                               td1.innerHTML = '<input type="radio" name="tech_select" onclick="techSelected('+providers[i].id+')">';
+                               td2.innerHTML = providers[i].name;
+                               let services = '';
+                               let zipCodes = '';
+                               for (let j=0;j<providers[i].work_types.length;j++){
+                                   services+=providers[i].work_types[j].type + ',';
+                               }
+                               for (let k=0;k<providers[i].zip_codes.length;k++){
+                                   zipCodes+=providers[i].zip_codes[k].zip_code + ',';
+                               }
+                               td3.innerHTML = services;
+                               td4.innerHTML = zipCodes;
+                               tr.appendChild(td1);
+                               tr.appendChild(td2);
+                               tr.appendChild(td3);
+                               tr.appendChild(td4);
+                               document.getElementById('tec_body').appendChild(tr);
+                           }
+                       }
+                    }
+                });
+
+            }
+        </script>
+
+        <script>
             var marker = false; ////Has the user plotted their location marker?
             var lati = 25.785257;
             var longi = -80.221207;
@@ -431,6 +505,23 @@
                         initMap();
                     }
                 });
+
+                var place = autocomplete.getPlace();
+
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+
+                    if (addressType === 'administrative_area_level_1'){
+                        var val = place.address_components[i]['long_name'];
+                        document.getElementById('city').value = val;
+                        document.getElementById('estate').value = val;
+                    }
+                    if (addressType === 'postal_code'){
+                        var val = place.address_components[i]['long_name'];
+                        document.getElementById('zipCode').value = val;
+                        zipCodeAdded(val);
+                    }
+                }
             }
         </script>
         <script async defer
@@ -452,8 +543,8 @@
             elem = document.getElementById("customer_availability_one");
             var iso = new Date().toISOString();
             var minDate = iso.substring(0,iso.length-1);
-            elem.min = minDate;
-            elem.max = maxDate;
+            elem.min = minDate.split('T')[0];
+            elem.max = maxDate.split('T')[0];
             console.log('min',minDate);
             console.log('max',maxDate);
         });
@@ -462,8 +553,8 @@
             elem = document.getElementById("customer_availability_two");
             var iso = new Date().toISOString();
             var minDate = iso.substring(0,iso.length-1);
-            elem.min = minDate;
-            elem.max = maxDate;
+            elem.min = minDate.split('T')[0];
+            elem.max = maxDate.split('T')[0];
             console.log('min',minDate);
             console.log('max',maxDate);
         });
