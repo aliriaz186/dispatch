@@ -507,20 +507,29 @@
                 });
 
                 var place = autocomplete.getPlace();
-
+                console.log(place.address_components);
                 for (var i = 0; i < place.address_components.length; i++) {
-                    var addressType = place.address_components[i].types[0];
+                    let addressTypes = place.address_components[i].types;
+                    for (let k=0;k<addressTypes.length;k++){
+                        var addressType = place.address_components[i].types[k];
 
-                    if (addressType === 'administrative_area_level_1'){
-                        var val = place.address_components[i]['long_name'];
-                        document.getElementById('city').value = val;
-                        document.getElementById('estate').value = val;
+                        if (addressType === 'administrative_area_level_1'){
+                            var val = place.address_components[i]['long_name'];
+                            // document.getElementById('city').value = val;
+                            document.getElementById('estate').value = val;
+                        }
+                        if (addressType === 'locality'){
+                            var val = place.address_components[i]['long_name'];
+                            document.getElementById('city').value = val;
+                            // document.getElementById('estate').value = val;
+                        }
+                        if (addressType === 'postal_code'){
+                            var val = place.address_components[i]['long_name'];
+                            document.getElementById('zipCode').value = val;
+                            zipCodeAdded(val);
+                        }
                     }
-                    if (addressType === 'postal_code'){
-                        var val = place.address_components[i]['long_name'];
-                        document.getElementById('zipCode').value = val;
-                        zipCodeAdded(val);
-                    }
+
                 }
             }
         </script>
