@@ -29,6 +29,8 @@
                                 <th>No</th>
                                 <th>Invoice</th>
                                 <th>Claim Id</th>
+                                <th>Status</th>
+                                <th>Mark as Paid</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -39,6 +41,16 @@
                                                                                                                     src="{{env('TECHNICIAN_URL')}}/new-invoices/{{$item->invoice}}"></a></td>
                                     <td>
                                         {{$item->job_id}}
+                                    </td>
+                                    <td>
+                                        <p style="font-weight: bold">{{$item->status}}</p>
+                                    </td>
+                                    <td>
+                                        @if($item->status == 'open')
+                                            <a href="{{env('APP_URL')}}/invoice-mark-as-paid/{{$item->id}}" >Mark as Paid</a>
+                                        @else
+                                            Already Paid
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

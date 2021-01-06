@@ -64,5 +64,6 @@ Route::get('caps/delete/{id}', 'CapController@deleteCap');
 Route::post('change/claim/technician', 'TechnicianController@changeTechnician');
 Route::post('get-provider-against-zip-code', 'TechnicianController@getProviderAgainstZipCode');
 Route::get('invoices', 'InvoiceController@getInvoices');
+Route::get('invoice-mark-as-paid/{id}', 'InvoiceController@changeStatus');
 
 

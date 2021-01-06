@@ -62,8 +62,21 @@
                                 </div>
                             </div>
                             @if(!\App\JobInvoices::where('job_id', $job->id)->exists())
+{{--                                <div class="kt-portlet__body">--}}
+{{--                                    --}}
+{{--                                </div>--}}
+
                                 <div class="kt-portlet__body">
                                     <p>No Invoice attached yet.</p>
+                                    <div class="row">
+
+                                        <label for="offer-images">Select file to upload: </label>
+                                        <div class="input-group">
+                                            <input id="offer-images" onclick="selectImages()" type="file"
+                                                   name="images[]"
+                                                   multiple/>
+                                        </div>
+                                    </div>
                                 </div>
                             @else
                                 <div style="margin-left: 10px">
@@ -882,4 +895,107 @@
 
     </script>
 
+<script>
+    function selectImages() {
+    if (window.File && window.FileList && window.FileReader) {
+    var filesInput = document.getElementById("offer-images");
+
+    filesInput.addEventListener("change", function (event) {
+    var files = [];
+    files = event.target.files; //FileList object
+    var output = document.getElementById("result");
+    for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+
+    //Only pics
+    if (!file.type.match('image'))
+    continue;
+
+    var picReader = new FileReader();
+
+    picReader.addEventListener("load", function (event) {
+
+    var picFile = event.target;
+
+    var div = document.createElement("span");
+
+    div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+    "title='" + picFile.name + "'/>";
+
+    output.insertBefore(div, null);
+
+    });
+
+    //Read the image
+    picReader.readAsDataURL(file);
+    }
+    KTApp.blockPage({
+    baseZ: 2000,
+    overlayColor: '#000000',
+    type: 'v1',
+    state: 'danger',
+    opacity: 0.15,
+    message: 'Processing...'
+    });
+    var offerImages = document.getElementById('offer-images').files;
+
+        let formData = new FormData();
+        for (var i = 0; i < offerImages.length; i++) {
+            formData.append("offer_images[]", offerImages[i]);
+        }
+        let jobId = document.getElementById('jobId').value;
+        formData.append("jobId", jobId);
+        formData.append("_token", "{{ csrf_token() }}");
+        $.ajax
+        ({
+            type: 'POST',
+            url: `{{env('TECHNICIAN_URL')}}/api/job/invoice/save`,
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                setTimeout(function () {
+                    KTApp.unblockPage();
+                }, 1000);
+                setTimeout(function () {
+                    swal.fire({
+                        "title": "",
+                        "text": "Saved Successfully",
+                        "type": "success",
+                        "showConfirmButton": false,
+                        "timer": 1500,
+                        "onClose": function (e) {
+                            setTimeout(function () {
+                                KTApp.unblockPage();
+                            }, 1000);
+                            window.location.reload();
+                        }
+                    })
+                }, 2000);
+            },
+            error: function (data) {
+                checkBoxesArray = [];
+                setTimeout(function () {
+                    KTApp.unblockPage();
+                }, 1000);
+                setTimeout(function () {
+                    swal.fire({
+                        "title": "",
+                        "text": result['message'],
+                        "type": "error",
+                        "confirmButtonClass": "btn btn-secondary",
+                        "onClose": function (e) {
+                            console.log('on close event fired!');
+                        }
+                    })
+                }, 2000);
+            }
+        });
+
+    });
+    } else {
+        console.log("Your browser does not support File API");
+    }
+    }</script>
 @endsection

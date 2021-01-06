@@ -8,6 +8,7 @@ use App\Customer;
 use App\DispatchJob;
 use App\JobCompletionStatus;
 use App\JobImages;
+use App\JobInvoices;
 use App\JobRating;
 use App\Jobs\CustomerJobCreatedEmail;
 use App\ScheduledJob;
