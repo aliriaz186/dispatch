@@ -471,13 +471,23 @@
                         <div class="modal-body">
 {{--                            <form method="post" action="" enctype="multipart/form-data">--}}
                                 <input id="job_id" name="job_id" value="{{$job->id}}" type="hidden">
+                            <h3>we are now showing providers near to the zip code of job!</h3>
                                 <select name="technician_id" id="technician_id"
                                         class="form-control">
                                     <option value="">Select Technician</option>
-                                    @foreach(\App\Technician::all() as $item)
+{{--                                    @foreach(\App\Technician::all() as $item)--}}
+{{--                                        <option value="{{$item->id}}">{{$item->name}} |--}}
+{{--                                            <ul style="float: right">--}}
+{{--                                                @foreach(\App\TechnicianWorkType::all() as $items)--}}
+{{--                                                    <li>{{$items->type}} ,</li>--}}
+{{--                                                @endforeach--}}
+{{--                                            </ul>--}}
+{{--                                        </option>--}}
+{{--                                    @endforeach--}}
+                                    @foreach($selectedProviders as $item)
                                         <option value="{{$item->id}}">{{$item->name}} |
                                             <ul style="float: right">
-                                                @foreach(\App\TechnicianWorkType::all() as $items)
+                                                @foreach($item['work_types'] as $items)
                                                     <li>{{$items->type}} ,</li>
                                                 @endforeach
                                             </ul>

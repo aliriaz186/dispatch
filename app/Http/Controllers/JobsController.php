@@ -13,6 +13,8 @@ use App\JobRating;
 use App\Jobs\CustomerJobCreatedEmail;
 use App\ScheduledJob;
 use App\Technician;
+use App\TechnicianWorkType;
+use App\TechnicianZipCode;
 use App\Worker;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -217,7 +219,24 @@ class JobsController extends Controller
         $scheduledJob = Worker::where('id', $workerId)->first();
         $schedule = ScheduledJob::where('id_job', $jobId)->first();
 
-        return view('dashboard.job-details')->with(['schedule' => $schedule,'scheduledJob' => $scheduledJob, 'ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
+        //get provider near to address
+        $allProviders = Technician::all();
+        $providers = [];
+        foreach ($allProviders as $provider){
+            $provider['work_types'] = TechnicianWorkType::where('technician_id', $provider->id)->get();
+            $provider['zip_codes'] = TechnicianZipCode::where('technician_id', $provider->id)->get();
+            $flag = false;
+            foreach ($provider['zip_codes'] as $zip_code){
+                if ($zip_code->zip_code == $job->zip_code){
+                    $flag = true;
+                }
+            }
+            if ($flag){
+                array_push($providers, $provider);
+            }
+        }
+
+        return view('dashboard.job-details')->with(['selectedProviders' => $providers,'schedule' => $schedule,'scheduledJob' => $scheduledJob, 'ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
     }
 
     public function denyFollowUpClaim(Request $request)

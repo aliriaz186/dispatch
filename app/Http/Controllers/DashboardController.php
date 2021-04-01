@@ -14,7 +14,7 @@ class DashboardController extends Controller
     {
         $customersCount = Customer::all()->count();
         $technicianCount = Technician::all()->count();
-        $jobsCount = DispatchJob::where('status','!=','Completed')->count();
+        $jobsCount = DispatchJob::where('status','!=','Completed')->where('status','!=','denied')->count();
         $totalOpenClaimsCount = DispatchJob::where('created_at', '<', Carbon::now()->subDays(2)->toDateTimeString())->where('status', 'offered')->count();
         $totalTodayCompletedClaims = DispatchJob::where('created_at' , Carbon::today())->where('status', 'Completed')->count();
         $month = date('m');
