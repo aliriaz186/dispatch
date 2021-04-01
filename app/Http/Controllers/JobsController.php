@@ -235,8 +235,12 @@ class JobsController extends Controller
                 array_push($providers, $provider);
             }
         }
+        $noNearProvider = false;
+        if (empty($providers)){
+            $noNearProvider = true;
+        }
 
-        return view('dashboard.job-details')->with(['selectedProviders' => $providers,'schedule' => $schedule,'scheduledJob' => $scheduledJob, 'ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
+        return view('dashboard.job-details')->with(['noNearProvider' => $noNearProvider,'selectedProviders' => $providers,'schedule' => $schedule,'scheduledJob' => $scheduledJob, 'ratings' => $ratings, 'jobCompletionStatus' => $jobCompletionStatus, 'followUp' => $followUp, 'jobImages' => $jobImages, 'job' => $job, 'customer' => $customer, 'technician' => $technician]);
     }
 
     public function denyFollowUpClaim(Request $request)

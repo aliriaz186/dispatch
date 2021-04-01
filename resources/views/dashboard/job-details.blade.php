@@ -471,28 +471,41 @@
                         <div class="modal-body">
 {{--                            <form method="post" action="" enctype="multipart/form-data">--}}
                                 <input id="job_id" name="job_id" value="{{$job->id}}" type="hidden">
-                            <h3>we are now showing providers near to the zip code of job!</h3>
+                            @if($noNearProvider == true)
+                                <h4>Unfortunately, there is no provider near the job zip code. So we are showing all the providers we have in database</h4>
+                            @else
+                                <h4>we are now showing providers near to the zip code of job!</h4>
+                            @endif
+
                                 <select name="technician_id" id="technician_id"
                                         class="form-control">
                                     <option value="">Select Technician</option>
-{{--                                    @foreach(\App\Technician::all() as $item)--}}
-{{--                                        <option value="{{$item->id}}">{{$item->name}} |--}}
-{{--                                            <ul style="float: right">--}}
-{{--                                                @foreach(\App\TechnicianWorkType::all() as $items)--}}
-{{--                                                    <li>{{$items->type}} ,</li>--}}
-{{--                                                @endforeach--}}
-{{--                                            </ul>--}}
-{{--                                        </option>--}}
-{{--                                    @endforeach--}}
-                                    @foreach($selectedProviders as $item)
-                                        <option value="{{$item->id}}">{{$item->name}} |
-                                            <ul style="float: right">
-                                                @foreach($item['work_types'] as $items)
-                                                    <li>{{$items->type}} ,</li>
-                                                @endforeach
-                                            </ul>
-                                        </option>
-                                    @endforeach
+
+
+                                    @if($noNearProvider == true)
+                                        @foreach(\App\Technician::all() as $item)
+                                            <option value="{{$item->id}}">{{$item->name}} |
+                                                <ul style="float: right">
+                                                    @foreach(\App\TechnicianWorkType::all() as $items)
+                                                        <li>{{$items->type}} ,</li>
+                                                    @endforeach
+                                                </ul>
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        @foreach($selectedProviders as $item)
+                                            <option value="{{$item->id}}">{{$item->name}} |
+                                                <ul style="float: right">
+                                                    @foreach($item['work_types'] as $items)
+                                                        <li>{{$items->type}} ,</li>
+                                                    @endforeach
+                                                </ul>
+                                            </option>
+                                        @endforeach
+                                    @endif
+
+
+
                                 </select>
                                 <div>
                                     <button type="button" id="send-email-btn" class="btn btn-success"
