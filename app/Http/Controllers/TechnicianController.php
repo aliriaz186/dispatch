@@ -70,8 +70,29 @@ class TechnicianController extends Controller
             $technician->city = $request->city;
             $technician->state = $request->state;
             $technician->website = $request->website;
-            $technician->longg = $request->longg;
-            $technician->lat = $request->lat;
+
+            if (empty($request->lat) || empty($request->longg)){
+                try {
+                    $address = $request->address;
+                    $latlong = $this->get_lat_long($address);
+                    $map = explode(',', $latlong);
+                    $address = str_replace(" ", "+", $address);
+                    $json = file_get_contents("https://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=usa&key=AIzaSyC141fW_XoCD_dJHMaTygnLX1kDLeTWcwo");
+                    $json = json_decode($json);
+                    $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+                    $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+                    $technician->lat = $lat;
+                    $technician->longg = $long;
+                }catch (\Exception $exception){
+                    $technician->lat = 25.9420377;
+                    $technician->longg = -80.2456045;
+                }
+
+            }else{
+                $technician->longg = $request->longg;
+                $technician->lat = $request->lat;
+            }
+
             if (!empty($request->password)) {
                 $technician->password = md5($request->password);
             } else {
